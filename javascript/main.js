@@ -20,13 +20,33 @@ document.addEventListener("DOMContentLoaded", () => {
   loopBar.style.left = 0;
   grid.appendChild(loopBar);
 
-  const loopId = setInterval(function() {
-    const startLeft = parseFloat(loopBar.style.left);
-    const newLeft = (startLeft + .25) % 100;
-    loopBar.style.left = `+${newLeft}%`;
-  }, 12);
+  var loop;
+
+  const footer = document.getElementById('footer');
+  const button = document.createElement('button');
+  button.className = "play";
+  button.innerHTML = '▶︎';
+  button.onclick = (e) => togglePlay(e, loopBar);
+  footer.appendChild(button);
 });
 
 const toggleSelected = (e) => {
   e.currentTarget.classList.toggle('unselected');
+};
+
+const togglePlay = (e, bar) => {
+  const button = e.currentTarget;
+  if (button.className === 'play') {
+    loop = setInterval(function() {
+      const startLeft = parseFloat(bar.style.left);
+      const newLeft = (startLeft + .25) % 100;
+      bar.style.left = `+${newLeft}%`;
+    }, 12);
+    button.className = "pause";
+    button.innerHTML = '🁢 🁢';
+  } else {
+    clearInterval(loop);
+    button.className = "play";
+    button.innerHTML = '▶︎';
+  }
 };

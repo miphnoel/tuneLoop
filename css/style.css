@@ -19,6 +19,40 @@ span, article, footer, time, small {
 body {
   height: 100vh;
   width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 34px;
+  font-weight: bold;
+  font-family: "San Francisco", sans-serif;
+  margin: 15px 0;
+  color: rgb(22, 168, 240);
+}
+
+footer {
+  height: 15%;
+  min-height: 55px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  margin: 3px 0;
+  height: 40px;
+  width: 40px;
+  padding: 6px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+  background: rgb(22, 168, 240);
+  border-radius: 50%;
 }
 
 #grid {
@@ -27,12 +61,13 @@ body {
   width: 95%;
   margin: auto;
   position: relative;
+  overflow: hidden;
 }
 
 .loop-bar {
   position: absolute;
   z-index: 2;
-  background: rgba(22, 168, 240, 0.6);
+  background: rgba(22, 168, 240, 0.7);
   height: 100%;
   width: 6.25%;
 }
