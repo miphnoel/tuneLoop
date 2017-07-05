@@ -1,0 +1,45 @@
+html, body, header, nav, h1, a,
+ul, li, strong, main, button, i,
+section, img, div, h2, p, form,
+fieldset, label, input, textarea,
+span, article, footer, time, small {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  box-sizing: inherit;
+  background: transparent;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
+#grid {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+ul {
+  list-style: none;
+  width: 12.5%;
+  display: flex;
+  flex-direction: column;
+}
+
+li {
+  height: 12.5%;
+  box-sizing: border-box;
+  border: 1px solid black;
+}
+
+.selected {
+  background: red;
+}
