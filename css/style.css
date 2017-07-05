@@ -23,23 +23,66 @@ body {
 
 #grid {
   display: flex;
+  height: 95%;
+  width: 95%;
+  margin: auto;
+  position: relative;
+}
+
+.loop-bar {
+  position: absolute;
+  z-index: 2;
+  background: rgba(22, 168, 240, 0.6);
   height: 100%;
-  width: 100%;
+  width: 6.25%;
 }
 
 ul {
   list-style: none;
-  width: 12.5%;
+  width: 6.25%;
   display: flex;
   flex-direction: column;
 }
 
 li {
-  height: 12.5%;
+  height: 6.25%;
   box-sizing: border-box;
-  border: 1px solid black;
+  border: 1px solid rgb(242, 242, 242);
 }
 
-.selected {
-  background: red;
+li:hover {
+  cursor: pointer;
+  opacity: .8;
+}
+
+.hue-0 {
+  background: #4e61d8;
+}
+
+.hue-1 {
+  background: #a542b1;
+}
+
+.hue-2 {
+  background: #f75839;
+}
+
+.hue-3 {
+  background: #f7943d;
+}
+
+.hue-4 {
+  background: #d1c12e;
+}
+
+.hue-5 {
+  background: #4bb250;
+}
+
+.hue-6 {
+  background: #4598b6;
+}
+
+.unselected {
+  background: white;
 }
