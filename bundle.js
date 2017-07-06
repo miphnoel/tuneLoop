@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
   footer.appendChild(modeButton);
 });
 
-Tone.Transport.bpm.value = 240;
+Tone.Transport.bpm.value = 180;
 Tone.Transport.loop = true;
 Tone.Transport.loopEnd = '2m';
 window.mode = _pitches.major;
