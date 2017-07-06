@@ -23,50 +23,30 @@ body {
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  font-family: "San Francisco", sans-serif;
 }
 
 h1 {
   font-size: 34px;
   font-weight: bold;
-  font-family: "San Francisco", sans-serif;
   margin: 15px 0;
   color: rgb(22, 168, 240);
 }
 
-footer {
-  height: 15%;
-  min-height: 55px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-button {
-  margin: 3px 0;
-  height: 40px;
-  width: 40px;
-  padding: 6px;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  font-size: 18px;
-  background: rgb(22, 168, 240);
-  border-radius: 50%;
-}
-
 #grid {
   display: flex;
+  flex: 2;
   height: 95%;
   width: 95%;
   margin: auto;
   position: relative;
   overflow: hidden;
+  border: 2px solid rgb(22, 168, 240);
+  border-radius: 3px;
 }
 
 .loop-bar {
   position: absolute;
-  z-index: 2;
   background: rgba(22, 168, 240, 0.7);
   height: 100%;
   width: 6.25%;
@@ -80,9 +60,11 @@ ul {
 }
 
 li {
+  flex: 2;
   height: 6.25%;
   box-sizing: border-box;
-  border: 1px solid rgb(242, 242, 242);
+  border: 1px solid rgba(242, 242, 242, 0.4);
+  border-radius: 2px;
 }
 
 li:hover {
@@ -119,5 +101,36 @@ li:hover {
 }
 
 .unselected {
-  background: white;
+  background: transparent;
+  border-radius: 0;
+}
+
+.unselected.octave {
+  background: rgba(78, 97, 216, 0.05);
+}
+
+.unselected.fifth {
+  background: rgba(247, 148, 61, 0.05);
+}
+
+footer {
+  height: 15%;
+  min-height: 55px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  margin: 3px 0;
+  height: 40px;
+  width: 40px;
+  padding: 6px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+  background: rgb(22, 168, 240);
+  border-radius: 50%;
 }
