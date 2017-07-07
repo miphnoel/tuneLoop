@@ -134,3 +134,8 @@ button {
   background: rgb(22, 168, 240);
   border-radius: 50%;
 }
+
+button:hover {
+  cursor: pointer;
+  background: rgb(50, 200, 240);
+}

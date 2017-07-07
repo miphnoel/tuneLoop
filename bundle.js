@@ -134,8 +134,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var playButton = document.createElement('button');
   playButton.className = "play";
   playButton.innerHTML = '▶︎';
-  playButton.onclick = function (e) {
-    return togglePlay(e, loopBar);
+  playButton.onclick = function () {
+    return togglePlay(playButton, loopBar);
   };
   footer.appendChild(playButton);
 
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
   clearButton.className = "clear";
   clearButton.innerHTML = 'C';
   clearButton.onclick = function () {
-    return clear(loopBar);
+    return clear(playButton, loopBar);
   };
   footer.appendChild(clearButton);
 });
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 Tone.Transport.bpm.value = 180;
 Tone.Transport.loop = true;
 Tone.Transport.loopEnd = '2m';
-window.mode = _constants.major;
+window.mode = 'major';
 
 var seqMap = (0, _merge2.default)({}, _constants.defaultMap);
 
@@ -177,14 +177,12 @@ var toggleSpace = function toggleSpace(space) {
 };
 
 var updateSequenceMap = function updateSequenceMap(space) {
-  var col = space.col,
-      pitch = space.pitch;
-
+  var col = space.col;
+  var pitch = _constants.pitches[window.mode][space.pitch];
   if (space.classList.contains('unselected')) {
-    seqMap[col].push(window.mode[pitch]);
+    seqMap[col][[pitch]] = true;
   } else {
-    var idx = seqMap[col].indexOf(window.mode[pitch]);
-    seqMap[col].splice(idx, 1);
+    delete seqMap[col][[pitch]];
   }
 };
 
@@ -193,25 +191,42 @@ var scheduleNotes = function scheduleNotes(col) {
     Tone.Transport.clear(eventIds[col]);
   }
   eventIds[col] = Tone.Transport.schedule(function (time) {
-    synth.triggerAttackRelease(seqMap[col], '8n');
+    synth.triggerAttackRelease(Object.keys(seqMap[col]), '8n');
   }, col + '*8n');
 };
 
 var toggleMode = function toggleMode(e) {
+  updateSequenceModality();
   var button = e.currentTarget;
   if (button.className === 'major') {
     button.className = 'minor';
     button.innerHTML = 'm';
-    window.mode = _constants.minor;
+    window.mode = 'minor';
   } else {
     button.className = 'major';
     button.innerHTML = 'M';
-    window.mode = _constants.major;
+    window.mode = 'major';
   }
 };
 
-var togglePlay = function togglePlay(e, bar) {
-  var button = e.currentTarget;
+var updateSequenceModality = function updateSequenceModality() {
+  var newMode = window.mode === 'major' ? 'minor' : 'major';
+  for (var col = 0; col < 16; col++) {
+    var column = seqMap[col];
+    var adjusted = false;
+    for (var i = 0; i < 4; i++) {
+      var pitch = _constants.intervals[window.mode][i];
+      if (column[pitch]) {
+        delete column[pitch];
+        column[_constants.intervals[newMode][i]] = true;
+        adjusted = true;
+      }
+    }
+    if (adjusted) scheduleNotes(col);
+  }
+};
+
+var togglePlay = function togglePlay(button, bar) {
   if (button.className === 'play') {
     bar.style.left = 0;
     Tone.Transport.start();
@@ -225,10 +240,11 @@ var togglePlay = function togglePlay(e, bar) {
   }
 };
 
-var clear = function clear(loopBar) {
+var clear = function clear(playButton, loopBar) {
   resetGrid();
   clearMap();
   clearEvents();
+  togglePlay(playButton, loopBar);
   loopBar.style.left = "-6.25%";
 };
 
@@ -249,10 +265,10 @@ var clearEvents = function clearEvents() {
     return Tone.Transport.clear(event);
   });
   eventIds = {};
+  clearInterval(window.loopId);
 };
 
 window.defaultMap = _constants.defaultMap;
-window.seqMap = seqMap;
 window.tone = Tone;
 
 /***/ }),
@@ -22711,59 +22727,65 @@ var __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory){
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var major = exports.major = {
-  14: "C3",
-  13: "D3",
-  12: "E3",
-  11: "F3",
-  10: "G3",
-  9: "A3",
-  8: "B3",
-  7: "C4",
-  6: "D4",
-  5: "E4",
-  4: "F4",
-  3: "G4",
-  2: "A4",
-  1: "B4",
-  0: "C5"
-};
-
-var minor = exports.minor = {
-  14: "C3",
-  13: "D3",
-  12: "Eb3",
-  11: "F3",
-  10: "G3",
-  9: "Ab3",
-  8: "B3",
-  7: "C4",
-  6: "D4",
-  5: "Eb4",
-  4: "F4",
-  3: "G4",
-  2: "Ab4",
-  1: "B4",
-  0: "C5"
+var pitches = exports.pitches = {
+  major: {
+    14: "C3",
+    13: "D3",
+    12: "E3",
+    11: "F3",
+    10: "G3",
+    9: "A3",
+    8: "B3",
+    7: "C4",
+    6: "D4",
+    5: "E4",
+    4: "F4",
+    3: "G4",
+    2: "A4",
+    1: "B4",
+    0: "C5"
+  },
+  minor: {
+    14: "C3",
+    13: "D3",
+    12: "Eb3",
+    11: "F3",
+    10: "G3",
+    9: "Ab3",
+    8: "B3",
+    7: "C4",
+    6: "D4",
+    5: "Eb4",
+    4: "F4",
+    3: "G4",
+    2: "Ab4",
+    1: "B4",
+    0: "C5"
+  }
 };
 
 var defaultMap = exports.defaultMap = {
-  0: [],
-  1: [],
-  2: [],
-  3: [],
-  4: [],
-  5: [],
-  6: [],
-  7: [],
-  8: [],
-  9: [],
-  10: [],
-  11: [],
-  12: [],
-  13: [],
-  14: [],
-  15: []
+  0: {},
+  1: {},
+  2: {},
+  3: {},
+  4: {},
+  5: {},
+  6: {},
+  7: {},
+  8: {},
+  9: {},
+  10: {},
+  11: {},
+  12: {},
+  13: {},
+  14: {},
+  15: {}
+};
+
+var intervals = exports.intervals = {
+  major: [pitches.major[2], pitches.major[5], pitches.major[9], pitches.major[12]],
+  minor: [pitches.minor[2], pitches.minor[5], pitches.minor[9], pitches.minor[12]]
 };
 
 /***/ }),

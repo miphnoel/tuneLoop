@@ -1,6 +1,6 @@
 var Tone = require("tone");
 import merge from 'lodash/merge';
-import { major, minor, defaultMap } from './constants';
+import { pitches, defaultMap, intervals } from './constants';
 
 document.addEventListener("DOMContentLoaded", () => {
   document.body.onmousedown = () => window.mousedown = true;
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.createElement('button');
   playButton.className = "play";
   playButton.innerHTML = '▶︎';
-  playButton.onclick = (e) => togglePlay(e, loopBar);
+  playButton.onclick = () => togglePlay(playButton, loopBar);
   footer.appendChild(playButton);
 
   const modeButton = document.createElement('button');
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearButton = document.createElement('button');
   clearButton.className = "clear";
   clearButton.innerHTML = 'C';
-  clearButton.onclick = () => clear(loopBar);
+  clearButton.onclick = () => clear(playButton, loopBar);
   footer.appendChild(clearButton);
 });
 
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 Tone.Transport.bpm.value = 180;
 Tone.Transport.loop = true;
 Tone.Transport.loopEnd = '2m';
-window.mode = major;
+window.mode = 'major';
 
 let seqMap = merge({}, defaultMap);
 
@@ -85,12 +85,12 @@ const toggleSpace = (space) => {
 };
 
 const updateSequenceMap = (space) => {
-  const { col, pitch } = space;
+  const col = space.col;
+  const pitch = pitches[window.mode][space.pitch];
   if (space.classList.contains('unselected')) {
-    seqMap[col].push(window.mode[pitch]);
+    seqMap[col][[pitch]] = true;
   } else {
-    let idx = seqMap[col].indexOf(window.mode[pitch]);
-    seqMap[col].splice(idx, 1);
+    delete seqMap[col][[pitch]];
   }
 };
 
@@ -99,26 +99,42 @@ const scheduleNotes = (col) => {
     Tone.Transport.clear(eventIds[col]);
   }
   eventIds[col] = Tone.Transport.schedule(function(time){
-    synth.triggerAttackRelease(seqMap[col], '8n');
+    synth.triggerAttackRelease(Object.keys(seqMap[col]), '8n');
   }, `${col}*8n`);
 };
 
 const toggleMode = (e) => {
+  updateSequenceModality();
   const button = e.currentTarget;
   if (button.className === 'major') {
     button.className = 'minor';
     button.innerHTML = 'm';
-    window.mode = minor;
+    window.mode = 'minor';
   } else {
     button.className = 'major';
     button.innerHTML = 'M';
-    window.mode = major;
+    window.mode = 'major';
   }
 };
 
+const updateSequenceModality = () => {
+  const newMode = window.mode === 'major' ? 'minor' : 'major';
+  for (let col = 0; col < 16; col++) {
+    const column = seqMap[col];
+    let adjusted = false;
+    for(let i = 0; i < 4; i++) {
+      let pitch = intervals[window.mode][i];
+      if (column[pitch]) {
+        delete column[pitch];
+        column[intervals[newMode][i]] = true;
+        adjusted = true;
+      }
+    }
+    if (adjusted) scheduleNotes(col);
+  }
+};
 
-const togglePlay = (e, bar) => {
-  const button = e.currentTarget;
+const togglePlay = (button, bar) => {
   if (button.className === 'play') {
     bar.style.left = 0;
     Tone.Transport.start();
@@ -132,10 +148,11 @@ const togglePlay = (e, bar) => {
   }
 };
 
-const clear = (loopBar) => {
+const clear = (playButton, loopBar) => {
   resetGrid();
   clearMap();
   clearEvents();
+  togglePlay(playButton, loopBar);
   loopBar.style.left = "-6.25%";
 };
 
@@ -154,8 +171,8 @@ const clearEvents = () => {
     Tone.Transport.clear(event)
   );
   eventIds = {};
+  clearInterval(window.loopId);
 };
 
 window.defaultMap = defaultMap;
-window.seqMap = seqMap;
 window.tone = Tone;
