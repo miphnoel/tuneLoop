@@ -43,6 +43,7 @@ h1 {
   overflow: hidden;
   border: 2px solid rgb(22, 168, 240);
   border-radius: 3px;
+  justify-content: center;
 }
 
 .loop-bar {
@@ -138,4 +139,10 @@ button {
 button:hover {
   cursor: pointer;
   background: rgb(50, 200, 240);
+}
+
+.demo-text {
+  position: absolute;
+  z-index: 3;
+  align-self: center;
 }

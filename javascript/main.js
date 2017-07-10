@@ -1,6 +1,6 @@
 var Tone = require("tone");
 import merge from 'lodash/merge';
-import { pitches, defaultMap, intervals } from './constants';
+import { pitches, defaultMap, intervals, demoSpaces } from './constants';
 
 document.addEventListener("DOMContentLoaded", () => {
   document.body.onmousedown = () => window.mousedown = true;
@@ -31,23 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
   loopBar.style.left = "-6.25%";
   grid.appendChild(loopBar);
 
-  const resetLoop = Tone.Transport.schedule(function(time){
-    loopBar.style.left = 0;
-  }, 0);
-
-  Tone.Transport.scheduleRepeat(function(time) {
-    Tone.Draw.schedule(function() {
-      const startLeft = parseFloat(loopBar.style.left);
-      const newLeft = (startLeft + .125) % 100;
-      loopBar.style.left = `+${newLeft}%`;
-    }, time)
-  }, "8n / 50");
-
   const footer = document.getElementById('footer');
+
   const playButton = document.createElement('button');
   playButton.className = "play";
   playButton.innerHTML = '▶︎';
-  playButton.onclick = () => togglePlay(playButton, loopBar);
+  playButton.onclick = togglePlay;
   footer.appendChild(playButton);
 
   const modeButton = document.createElement('button');
@@ -59,12 +48,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearButton = document.createElement('button');
   clearButton.className = "clear";
   clearButton.innerHTML = 'C';
-  clearButton.onclick = () => clear(playButton, loopBar);
+  clearButton.onclick = clear;
   footer.appendChild(clearButton);
+
+  const demoButton = document.createElement('button');
+  demoButton.className = "demo";
+  demoButton.innerHTML = 'D';
+  demoButton.onclick = demo;
+  footer.appendChild(demoButton);
+
+  window.loopBar = loopBar;
+  window.playButton = playButton;
+  window.demoSpaces = demoSpaces();
 });
 
+Tone.Transport.scheduleRepeat(function(time) {
+  Tone.Draw.schedule(function() {
+    const startLeft = parseFloat(window.loopBar.style.left);
+    const newLeft = (startLeft + .125) % 100;
+    window.loopBar.style.left = `+${newLeft}%`;
+  }, time)
+}, "8n / 50");
 
-Tone.Transport.bpm.value = 180;
+const resetLoop = Tone.Transport.schedule(function(time){
+  window.loopBar.style.left = 0;
+}, 0);
+
+Tone.Transport.bpm.value = 120;
 Tone.Transport.loop = true;
 Tone.Transport.loopEnd = '2m';
 window.mode = 'major';
@@ -80,7 +90,8 @@ const triggerToggle = (e) => {
 };
 
 const toggleSpace = (space) => {
-  if (space.classList.contains('unselected')) {
+  if (space.classList.contains('unselected') &&
+      window.playButton.className === 'play') {
     synth.triggerAttackRelease(pitches[window.mode][space.pitch], '8n');
   }
   updateSequenceMap(space);
@@ -139,31 +150,31 @@ const updateSequenceModality = () => {
   }
 };
 
-const togglePlay = (button, bar) => {
-  if (button.className === 'play') play(button, bar);
-  else pause(button);
+const togglePlay = () => {
+  if (window.playButton.className === 'play') play();
+  else pause();
 };
 
-const play = (button, bar) => {
-  bar.style.left = 0;
+const play = () => {
+  window.loopBar.style.left = 0;
   Tone.Transport.start('+0.1');
-  button.className = "pause";
-  button.innerHTML = '🁢 🁢';
+  window.playButton.className = "pause";
+  window.playButton.innerHTML = '🁢 🁢';
 };
 
-const pause = (button) => {
+const pause = () => {
   clearInterval(window.loopId);
   Tone.Transport.stop();
-  button.className = "play";
-  button.innerHTML = '▶︎';
+  window.playButton.className = "play";
+  window.playButton.innerHTML = '▶︎';
 };
 
-const clear = (playButton, loopBar) => {
+const clear = () => {
   resetGrid();
   clearMap();
   clearEvents();
-  pause(playButton);
-  loopBar.style.left = "-6.25%";
+  pause();
+  window.loopBar.style.left = "-6.25%";
 };
 
 const resetGrid = () => {
@@ -182,6 +193,24 @@ const clearEvents = () => {
   );
   eventIds = {};
 };
+
+const demoText = () => {
+  const message = document.createElement('h1');
+  message.className = "demo-text";
+  message.textContent = "A tune just for you...";
+  $('#grid').append(message);
+  setTimeout(() => message.textContent = "Let's go!", 100 * 45);
+  setTimeout(() => $('.demo-text').remove(), 100 * 50);
+}
+
+const demo = () => {
+  clear();
+  window.demoSpaces.forEach((space, i) => {
+    setTimeout(() => toggleSpace(space[0]), 100 * i);
+  });
+  demoText();
+  setTimeout(() => play(), 100 * 50);
+}
 
 window.defaultMap = defaultMap;
 window.tone = Tone;

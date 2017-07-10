@@ -120,25 +120,12 @@ document.addEventListener("DOMContentLoaded", function () {
   loopBar.style.left = "-6.25%";
   grid.appendChild(loopBar);
 
-  var resetLoop = Tone.Transport.schedule(function (time) {
-    loopBar.style.left = 0;
-  }, 0);
-
-  Tone.Transport.scheduleRepeat(function (time) {
-    Tone.Draw.schedule(function () {
-      var startLeft = parseFloat(loopBar.style.left);
-      var newLeft = (startLeft + .125) % 100;
-      loopBar.style.left = '+' + newLeft + '%';
-    }, time);
-  }, "8n / 50");
-
   var footer = document.getElementById('footer');
+
   var playButton = document.createElement('button');
   playButton.className = "play";
   playButton.innerHTML = '▶︎';
-  playButton.onclick = function () {
-    return togglePlay(playButton, loopBar);
-  };
+  playButton.onclick = togglePlay;
   footer.appendChild(playButton);
 
   var modeButton = document.createElement('button');
@@ -150,13 +137,33 @@ document.addEventListener("DOMContentLoaded", function () {
   var clearButton = document.createElement('button');
   clearButton.className = "clear";
   clearButton.innerHTML = 'C';
-  clearButton.onclick = function () {
-    return clear(playButton, loopBar);
-  };
+  clearButton.onclick = clear;
   footer.appendChild(clearButton);
+
+  var demoButton = document.createElement('button');
+  demoButton.className = "demo";
+  demoButton.innerHTML = 'D';
+  demoButton.onclick = demo;
+  footer.appendChild(demoButton);
+
+  window.loopBar = loopBar;
+  window.playButton = playButton;
+  window.demoSpaces = (0, _constants.demoSpaces)();
 });
 
-Tone.Transport.bpm.value = 180;
+Tone.Transport.scheduleRepeat(function (time) {
+  Tone.Draw.schedule(function () {
+    var startLeft = parseFloat(window.loopBar.style.left);
+    var newLeft = (startLeft + .125) % 100;
+    window.loopBar.style.left = '+' + newLeft + '%';
+  }, time);
+}, "8n / 50");
+
+var resetLoop = Tone.Transport.schedule(function (time) {
+  window.loopBar.style.left = 0;
+}, 0);
+
+Tone.Transport.bpm.value = 120;
 Tone.Transport.loop = true;
 Tone.Transport.loopEnd = '2m';
 window.mode = 'major';
@@ -172,7 +179,7 @@ var triggerToggle = function triggerToggle(e) {
 };
 
 var toggleSpace = function toggleSpace(space) {
-  if (space.classList.contains('unselected')) {
+  if (space.classList.contains('unselected') && window.playButton.className === 'play') {
     synth.triggerAttackRelease(_constants.pitches[window.mode][space.pitch], '8n');
   }
   updateSequenceMap(space);
@@ -231,30 +238,30 @@ var updateSequenceModality = function updateSequenceModality() {
   }
 };
 
-var togglePlay = function togglePlay(button, bar) {
-  if (button.className === 'play') play(button, bar);else pause(button);
+var togglePlay = function togglePlay() {
+  if (window.playButton.className === 'play') play();else pause();
 };
 
-var play = function play(button, bar) {
-  bar.style.left = 0;
+var play = function play() {
+  window.loopBar.style.left = 0;
   Tone.Transport.start('+0.1');
-  button.className = "pause";
-  button.innerHTML = '🁢 🁢';
+  window.playButton.className = "pause";
+  window.playButton.innerHTML = '🁢 🁢';
 };
 
-var pause = function pause(button) {
+var pause = function pause() {
   clearInterval(window.loopId);
   Tone.Transport.stop();
-  button.className = "play";
-  button.innerHTML = '▶︎';
+  window.playButton.className = "play";
+  window.playButton.innerHTML = '▶︎';
 };
 
-var clear = function clear(playButton, loopBar) {
+var clear = function clear() {
   resetGrid();
   clearMap();
   clearEvents();
-  pause(playButton);
-  loopBar.style.left = "-6.25%";
+  pause();
+  window.loopBar.style.left = "-6.25%";
 };
 
 var resetGrid = function resetGrid() {
@@ -274,6 +281,32 @@ var clearEvents = function clearEvents() {
     return Tone.Transport.clear(event);
   });
   eventIds = {};
+};
+
+var demoText = function demoText() {
+  var message = document.createElement('h1');
+  message.className = "demo-text";
+  message.textContent = "A tune just for you...";
+  $('#grid').append(message);
+  setTimeout(function () {
+    return message.textContent = "Let's go!";
+  }, 100 * 45);
+  setTimeout(function () {
+    return $('.demo-text').remove();
+  }, 100 * 50);
+};
+
+var demo = function demo() {
+  clear();
+  window.demoSpaces.forEach(function (space, i) {
+    setTimeout(function () {
+      return toggleSpace(space[0]);
+    }, 100 * i);
+  });
+  demoText();
+  setTimeout(function () {
+    return play();
+  }, 100 * 50);
 };
 
 window.defaultMap = _constants.defaultMap;
@@ -3359,6 +3392,10 @@ var defaultMap = exports.defaultMap = {
 var intervals = exports.intervals = {
   major: [pitches.major[2], pitches.major[5], pitches.major[9], pitches.major[12]],
   minor: [pitches.minor[2], pitches.minor[5], pitches.minor[9], pitches.minor[12]]
+};
+
+var demoSpaces = exports.demoSpaces = function demoSpaces() {
+  return [$('.col-0 > .row-14'), $('.col-0 > .row-12'), $('.col-1 > .row-5'), $('.col-1 > .row-1'), $('.col-2 > .row-10'), $('.col-2 > .row-6'), $('.col-2 > .row-3'), $('.col-3 > .row-14'), $('.col-3 > .row-12'), $('.col-3 > .row-5'), $('.col-4 > .row-3'), $('.col-4 > .row-1'), $('.col-5 > .row-10'), $('.col-5 > .row-6'), $('.col-6 > .row-14'), $('.col-6 > .row-12'), $('.col-6 > .row-5'), $('.col-6 > .row-3'), $('.col-7 > .row-10'), $('.col-7 > .row-1'), $('.col-8 > .row-13'), $('.col-8 > .row-8'), $('.col-8 > .row-2'), $('.col-8 > .row-0'), $('.col-9 > .row-3'), $('.col-9 > .row-1'), $('.col-10 > .row-10'), $('.col-10 > .row-5'), $('.col-10 > .row-2'), $('.col-11 > .row-13'), $('.col-11 > .row-8'), $('.col-11 > .row-3'), $('.col-12 > .row-9'), $('.col-12 > .row-3'), $('.col-13 > .row-10'), $('.col-13 > .row-7'), $('.col-13 > .row-5'), $('.col-13 > .row-2'), $('.col-14 > .row-13'), $('.col-14 > .row-9'), $('.col-14 > .row-6'), $('.col-14 > .row-1'), $('.col-15 > .row-10'), $('.col-15 > .row-8'), $('.col-15 > .row-6')];
 };
 
 /***/ }),
