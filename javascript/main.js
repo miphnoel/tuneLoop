@@ -36,9 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 0);
 
   Tone.Transport.scheduleRepeat(function(time) {
-    const startLeft = parseFloat(loopBar.style.left);
-    const newLeft = (startLeft + .125) % 100;
-    loopBar.style.left = `+${newLeft}%`;
+    Tone.Draw.schedule(function() {
+      const startLeft = parseFloat(loopBar.style.left);
+      const newLeft = (startLeft + .125) % 100;
+      loopBar.style.left = `+${newLeft}%`;
+    }, time)
   }, "8n / 50");
 
   const footer = document.getElementById('footer');
@@ -78,6 +80,9 @@ const triggerToggle = (e) => {
 };
 
 const toggleSpace = (space) => {
+  if (space.classList.contains('unselected')) {
+    synth.triggerAttackRelease(pitches[window.mode][space.pitch], '8n');
+  }
   updateSequenceMap(space);
   space.classList.toggle('unselected');
   space.classList.toggle('selected');
@@ -135,24 +140,29 @@ const updateSequenceModality = () => {
 };
 
 const togglePlay = (button, bar) => {
-  if (button.className === 'play') {
-    bar.style.left = 0;
-    Tone.Transport.start();
-    button.className = "pause";
-    button.innerHTML = '🁢 🁢';
-  } else {
-    clearInterval(window.loopId);
-    Tone.Transport.stop();
-    button.className = "play";
-    button.innerHTML = '▶︎';
-  }
+  if (button.className === 'play') play(button, bar);
+  else pause(button);
+};
+
+const play = (button, bar) => {
+  bar.style.left = 0;
+  Tone.Transport.start('+0.1');
+  button.className = "pause";
+  button.innerHTML = '🁢 🁢';
+};
+
+const pause = (button) => {
+  clearInterval(window.loopId);
+  Tone.Transport.stop();
+  button.className = "play";
+  button.innerHTML = '▶︎';
 };
 
 const clear = (playButton, loopBar) => {
   resetGrid();
   clearMap();
   clearEvents();
-  togglePlay(playButton, loopBar);
+  pause(playButton);
   loopBar.style.left = "-6.25%";
 };
 
@@ -171,7 +181,6 @@ const clearEvents = () => {
     Tone.Transport.clear(event)
   );
   eventIds = {};
-  clearInterval(window.loopId);
 };
 
 window.defaultMap = defaultMap;

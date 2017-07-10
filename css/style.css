@@ -102,15 +102,15 @@ li:hover {
 
 .unselected {
   background: transparent;
-  border-radius: 0;
+  /*border-radius: 0;*/
 }
 
 .unselected.octave {
-  background: rgba(78, 97, 216, 0.05);
+  background: rgba(78, 97, 216, 0.08);
 }
 
 .unselected.fifth {
-  background: rgba(247, 148, 61, 0.05);
+  background: rgba(247, 148, 61, 0.08);
 }
 
 footer {
