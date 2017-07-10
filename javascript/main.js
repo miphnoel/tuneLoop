@@ -2,60 +2,60 @@ var Tone = require("tone");
 import merge from 'lodash/merge';
 import { pitches, defaultMap, intervals, demoSpaces } from './constants';
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.onmousedown = () => window.mousedown = true;
-  document.body.onmouseup = () => window.mousedown = false;
-  const grid = document.getElementById('grid');
+$(() => {
+  $('body').on('mousedown', () => window.mousedown = true);
+  $('body').on('mouseup', () => window.mousedown = false);
+  const grid = $('#grid');
   for (let c = 0; c < 16; c++) {
-    let column = document.createElement('ul');
-    column.className = `col-${c}`;
+    let column = $('<ul>');
+    column.addClass(`col-${c}`);
 
     for (let r = 0; r < 15; r++) {
-      let space = document.createElement('li');
-      space['pitch'] = r;
-      space['col'] = c;
+      let space = $('<li>');
+      space.attr('pitch', r);
+      space.attr('col', c);
       let classes = [`row-${r}`, `hue-${r % 7}`, 'unselected'];
       if (r % 7 === 0) classes.push('octave');
       if (r % 7 === 3) classes.push('fifth');
-      classes.forEach(className => space.classList.add(className));
-      space.onmousedown = triggerToggle;
-      space.onmouseenter = triggerToggle;
-      column.appendChild(space);
+      space.addClass(classes.join(' '));
+      space.on('mousedown', triggerToggle);
+      space.on('mouseenter',triggerToggle);
+      column.append(space);
     }
 
-    grid.appendChild(column);
+    grid.append(column);
   }
 
-  const loopBar = document.createElement('div');
-  loopBar.className = "loop-bar";
-  loopBar.style.left = "-6.25%";
-  grid.appendChild(loopBar);
+  const loopBar = $('<div>');
+  loopBar.addClass("loop-bar");
+  loopBar.css('left', "-6.25%");
+  grid.append(loopBar);
 
-  const footer = document.getElementById('footer');
+  const footer = $('footer');
 
-  const playButton = document.createElement('button');
-  playButton.className = "play";
-  playButton.innerHTML = '▶︎';
-  playButton.onclick = togglePlay;
-  footer.appendChild(playButton);
+  const playButton = $('<button>');
+  playButton.addClass("play");
+  playButton.html('▶︎');
+  playButton.on('click', togglePlay);
+  footer.append(playButton);
 
-  const modeButton = document.createElement('button');
-  modeButton.className = "major";
-  modeButton.innerHTML = 'M';
-  modeButton.onclick = toggleMode;
-  footer.appendChild(modeButton);
+  const modeButton = $('<button>');
+  modeButton.addClass("major");
+  modeButton.html('M');
+  modeButton.on('click', toggleMode);
+  footer.append(modeButton);
 
-  const clearButton = document.createElement('button');
-  clearButton.className = "clear";
-  clearButton.innerHTML = 'C';
-  clearButton.onclick = clear;
-  footer.appendChild(clearButton);
+  const clearButton = $('<button>');
+  clearButton.addClass("clear");
+  clearButton.html('C');
+  clearButton.on('click', clear);
+  footer.append(clearButton);
 
-  const demoButton = document.createElement('button');
-  demoButton.className = "demo";
-  demoButton.innerHTML = 'D';
-  demoButton.onclick = demo;
-  footer.appendChild(demoButton);
+  const demoButton = $('<button>');
+  demoButton.addClass("demo");
+  demoButton.html('D');
+  demoButton.on('click', demo);
+  footer.append(demoButton);
 
   window.loopBar = loopBar;
   window.playButton = playButton;
@@ -64,14 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 Tone.Transport.scheduleRepeat(function(time) {
   Tone.Draw.schedule(function() {
-    const startLeft = parseFloat(window.loopBar.style.left);
+    const startLeft = parseFloat(window.loopBar[0].style.left);
     const newLeft = (startLeft + .125) % 100;
-    window.loopBar.style.left = `+${newLeft}%`;
+    window.loopBar.css('left', `+${newLeft}%`);
   }, time)
 }, "8n / 50");
 
 const resetLoop = Tone.Transport.schedule(function(time){
-  window.loopBar.style.left = 0;
+  window.loopBar.css('left', 0);
 }, 0);
 
 Tone.Transport.bpm.value = 120;
@@ -86,27 +86,28 @@ const synth = new Tone.PolySynth(16).toMaster();
 
 const triggerToggle = (e) => {
   if (!window.mousedown && e.type === 'mouseenter') return;
-  toggleSpace(e.currentTarget);
+  toggleSpace($(e.currentTarget));
 };
 
 const toggleSpace = (space) => {
-  if (space.classList.contains('unselected') &&
-      window.playButton.className === 'play') {
-    synth.triggerAttackRelease(pitches[window.mode][space.pitch], '8n');
+  if (space.hasClass('unselected') &&
+      window.playButton.hasClass('play')) {
+    synth.triggerAttackRelease(
+      pitches[window.mode][space.attr('pitch')], '8n');
   }
   updateSequenceMap(space);
-  space.classList.toggle('unselected');
-  space.classList.toggle('selected');
-  scheduleNotes(space.col);
+  space.toggleClass('unselected selected');
+  scheduleNotes(space.attr('col'));
 };
 
 const updateSequenceMap = (space) => {
-  const col = space.col;
-  const pitch = pitches[window.mode][space.pitch];
-  if (space.classList.contains('unselected')) {
-    seqMap[col][[pitch]] = true;
+  const col = space.attr('col');
+  const pitch = pitches[window.mode][space.attr('pitch')];
+  if (space.hasClass('unselected')) {
+
+    seqMap[col][pitch] = true;
   } else {
-    delete seqMap[col][[pitch]];
+    delete seqMap[col][pitch];
   }
 };
 
@@ -121,16 +122,15 @@ const scheduleNotes = (col) => {
 
 const toggleMode = (e) => {
   updateSequenceModality();
-  const button = e.currentTarget;
-  if (button.className === 'major') {
-    button.className = 'minor';
-    button.innerHTML = 'm';
+  const button = $(e.currentTarget);
+  if (button.hasClass('major')) {
+    button.html('m');
     window.mode = 'minor';
   } else {
-    button.className = 'major';
-    button.innerHTML = 'M';
+    button.html('M');
     window.mode = 'major';
   }
+  button.toggleClass('minor major');
 };
 
 const updateSequenceModality = () => {
@@ -151,22 +151,22 @@ const updateSequenceModality = () => {
 };
 
 const togglePlay = () => {
-  if (window.playButton.className === 'play') play();
-  else pause();
+  window.playButton.hasClass('play') ? play() : pause();
 };
 
 const play = () => {
-  window.loopBar.style.left = 0;
-  Tone.Transport.start('+0.1');
-  window.playButton.className = "pause";
-  window.playButton.innerHTML = '🁢 🁢';
+  window.loopBar.css('left', 0);
+  Tone.Transport.start('+0.3');
+  window.playButton[0].className = "pause";
+  window.playButton.html('🁢 🁢');
 };
 
 const pause = () => {
   clearInterval(window.loopId);
+  window.loopBar.css('left', '-6.25%');
   Tone.Transport.stop();
-  window.playButton.className = "play";
-  window.playButton.innerHTML = '▶︎';
+  window.playButton[0].className = "play";
+  window.playButton.html('▶︎');
 };
 
 const clear = () => {
@@ -174,15 +174,11 @@ const clear = () => {
   clearMap();
   clearEvents();
   pause();
-  window.loopBar.style.left = "-6.25%";
+  window.loopBar.css('left', "-6.25%");
 };
 
 const resetGrid = () => {
-  let selected = document.querySelectorAll('.selected');
-  selected.forEach(space => {
-    space.classList.toggle('selected');
-    space.classList.toggle('unselected');
-  });
+   $('.selected').toggleClass('selected unselected');
 };
 
 const clearMap = () => seqMap = merge({}, defaultMap);
@@ -195,18 +191,18 @@ const clearEvents = () => {
 };
 
 const demoText = () => {
-  const message = document.createElement('h1');
-  message.className = "demo-text";
-  message.textContent = "A tune just for you...";
+  const message = $('<h1>');
+  message.addClass("demo-text");
+  message.html("A tune just for you...");
   $('#grid').append(message);
-  setTimeout(() => message.textContent = "Let's go!", 100 * 45);
+  setTimeout(() => message.html("Let's go!"), 100 * 45);
   setTimeout(() => $('.demo-text').remove(), 100 * 50);
 }
 
 const demo = () => {
   clear();
   window.demoSpaces.forEach((space, i) => {
-    setTimeout(() => toggleSpace(space[0]), 100 * i);
+    setTimeout(() => toggleSpace(space), 100 * i);
   });
   demoText();
   setTimeout(() => play(), 100 * 50);
@@ -214,3 +210,4 @@ const demo = () => {
 
 window.defaultMap = defaultMap;
 window.tone = Tone;
+window.seqMap = seqMap;
