@@ -4,7 +4,7 @@ import createFooter from './footer';
 import createLoopBar from './loop_bar';
 import { togglePlay, play, pause } from './play_functions';
 import { playPitch,
-         scheduleLoop,
+         scheduleVisuals,
          updateSequenceMap,
          scheduleNotes,
          updateSequenceModality,
@@ -17,7 +17,7 @@ $w(() => {
   const loopBar = createLoopBar();
 
   grid.append(loopBar);
-  scheduleLoop();
+  scheduleVisuals();
 
   $w('body').on('mousedown', () => window.mousedown = true);
   $w('body').on('mouseup', () => window.mousedown = false);

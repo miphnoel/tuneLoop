@@ -48,7 +48,7 @@ h1 {
 
 .loop-bar {
   position: absolute;
-  background: rgba(22, 168, 240, 0.7);
+  background: rgba(22, 168, 240, 0.4);
   height: 100%;
   width: 6.25%;
 }
@@ -117,6 +117,16 @@ li.unselected:hover {
   background: rgba(247, 148, 61, 0.08);
 }
 
+ul.fade > li.selected {
+  -webkit-transition: all 0.3s ease-in;
+}
+
+ul.highlight > li.selected {
+  background: #FFBB0B;
+  box-shadow: inset 2em #FF3E0B;
+  -webkit-transition: none;
+}
+
 footer {
   height: 15%;
   min-height: 55px;
@@ -142,6 +152,19 @@ button {
 button:hover {
   cursor: pointer;
   background: rgb(50, 200, 240);
+}
+
+.links {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}
+
+.links a {
+  padding: 5px;
+  color: rgb(22, 168, 240);
+  font-size: 30px;
 }
 
 .demo-text {

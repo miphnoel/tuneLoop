@@ -18,19 +18,38 @@ export const playPitch = (pitch) => {
   synth.triggerAttackRelease(pitches[window.mode][pitch], '8n');
 }
 
-export const scheduleLoop = () => {
+export const scheduleVisuals = () => {
+  scheduleLoop();
+  scheduleHighlights();
+}
+
+const scheduleLoop = () => {
   const loopBar = $w('.loop-bar');
   Tone.Transport.scheduleRepeat(function(time) {
-    Tone.Draw.schedule(function() {
-      const startLeft = parseFloat(loopBar.css('left'));
-      const newLeft = startLeft + .250;
-      loopBar.css('left', `+${newLeft}%`);
-    }, time)
-  }, "8n / 25");
+    const startLeft = parseFloat(loopBar.css('left'));
+    const newLeft = startLeft + .250;
+    loopBar.css('left', `+${newLeft}%`);
+  },"8n / 25");
 
   Tone.Transport.schedule(function(time){
     $w('.loop-bar').css('left', '0');
   }, 0);
+}
+
+const scheduleHighlights = () => {
+  for (let i = 0; i < 16; i++) {
+    let col = $w(`.col-${i}`);
+    Tone.Transport.schedule(function(time){
+      col.addClass('fade');
+      col.addClass('highlight');
+    }, `${2*i}*16n`);
+    Tone.Transport.schedule(function(time){
+      col.removeClass('highlight');
+    }, `${(2*i)+1}*16n`)
+    Tone.Transport.schedule(function(time){
+      col.removeClass('fade');
+    }, `${((2*i)+2)%32}*16n`);
+  }
 }
 
 export const updateSequenceMap = (space) => {

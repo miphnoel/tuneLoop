@@ -14,6 +14,7 @@ export const play = (button) => {
 
 export const pause = (button) => {
   $w('.loop-bar').css('left', '-6.25%');
+  $w('.playing').toggleClass('playing');
   transport.stop();
   button.nodes[0].className = "play";
   button.html('▶︎');

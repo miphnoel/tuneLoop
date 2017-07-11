@@ -924,7 +924,7 @@ $w(function () {
   var loopBar = (0, _loop_bar2.default)();
 
   grid.append(loopBar);
-  (0, _sequence.scheduleLoop)();
+  (0, _sequence.scheduleVisuals)();
 
   $w('body').on('mousedown', function () {
     return window.mousedown = true;
@@ -25822,7 +25822,7 @@ exports.default = createLoopBar;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateSequenceModality = exports.clearSequence = exports.scheduleNotes = exports.updateSequenceMap = exports.scheduleLoop = exports.playPitch = exports.transport = undefined;
+exports.updateSequenceModality = exports.clearSequence = exports.scheduleNotes = exports.updateSequenceMap = exports.scheduleVisuals = exports.playPitch = exports.transport = undefined;
 
 var _merge = __webpack_require__(30);
 
@@ -25850,19 +25850,42 @@ var playPitch = exports.playPitch = function playPitch(pitch) {
   synth.triggerAttackRelease(_constants.pitches[window.mode][pitch], '8n');
 };
 
-var scheduleLoop = exports.scheduleLoop = function scheduleLoop() {
+var scheduleVisuals = exports.scheduleVisuals = function scheduleVisuals() {
+  scheduleLoop();
+  scheduleHighlights();
+};
+
+var scheduleLoop = function scheduleLoop() {
   var loopBar = $w('.loop-bar');
   Tone.Transport.scheduleRepeat(function (time) {
-    Tone.Draw.schedule(function () {
-      var startLeft = parseFloat(loopBar.css('left'));
-      var newLeft = startLeft + .250;
-      loopBar.css('left', '+' + newLeft + '%');
-    }, time);
+    var startLeft = parseFloat(loopBar.css('left'));
+    var newLeft = startLeft + .250;
+    loopBar.css('left', '+' + newLeft + '%');
   }, "8n / 25");
 
   Tone.Transport.schedule(function (time) {
     $w('.loop-bar').css('left', '0');
   }, 0);
+};
+
+var scheduleHighlights = function scheduleHighlights() {
+  var _loop = function _loop(i) {
+    var col = $w('.col-' + i);
+    Tone.Transport.schedule(function (time) {
+      col.addClass('fade');
+      col.addClass('highlight');
+    }, 2 * i + '*16n');
+    Tone.Transport.schedule(function (time) {
+      col.removeClass('highlight');
+    }, 2 * i + 1 + '*16n');
+    Tone.Transport.schedule(function (time) {
+      col.removeClass('fade');
+    }, (2 * i + 2) % 32 + '*16n');
+  };
+
+  for (var i = 0; i < 16; i++) {
+    _loop(i);
+  }
 };
 
 var updateSequenceMap = exports.updateSequenceMap = function updateSequenceMap(space) {
@@ -25902,8 +25925,8 @@ var clearSequence = exports.clearSequence = function clearSequence() {
 
 var updateSequenceModality = exports.updateSequenceModality = function updateSequenceModality() {
   var newMode = window.mode === 'major' ? 'minor' : 'major';
-  for (var col = 0; col < 16; col++) {
-    var column = seqMap[col];
+  for (var _col = 0; _col < 16; _col++) {
+    var column = seqMap[_col];
     var adjusted = false;
     for (var i = 0; i < 4; i++) {
       var pitch = _constants.intervals[window.mode][i];
@@ -25913,7 +25936,7 @@ var updateSequenceModality = exports.updateSequenceModality = function updateSeq
         adjusted = true;
       }
     }
-    if (adjusted) scheduleNotes(col);
+    if (adjusted) scheduleNotes(_col);
   }
 };
 
@@ -25945,6 +25968,7 @@ var play = exports.play = function play(button) {
 
 var pause = exports.pause = function pause(button) {
   $w('.loop-bar').css('left', '-6.25%');
+  $w('.playing').toggleClass('playing');
   _sequence.transport.stop();
   button.nodes[0].className = "play";
   button.html('▶︎');
