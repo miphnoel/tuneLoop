@@ -21,6 +21,7 @@ body {
   width: 100vw;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   overflow: hidden;
   font-family: "San Francisco", sans-serif;
@@ -38,7 +39,6 @@ h1 {
   flex: 2;
   height: 95%;
   width: 95%;
-  margin: auto;
   position: relative;
   overflow: hidden;
   border: 2px solid rgb(22, 168, 240);
@@ -64,13 +64,17 @@ li {
   flex: 2;
   height: 6.25%;
   box-sizing: border-box;
-  border: 1px solid rgba(242, 242, 242, 0.4);
+  border: 1px solid rgba(242, 242, 242, 0.5);
   border-radius: 2px;
 }
 
 li:hover {
   cursor: pointer;
   opacity: .8;
+}
+
+li.unselected:hover {
+  border: 1px solid rgba(22, 168, 240, 0.7);
 }
 
 .hue-0 {
@@ -103,7 +107,6 @@ li:hover {
 
 .unselected {
   background: transparent;
-  /*border-radius: 0;*/
 }
 
 .unselected.octave {

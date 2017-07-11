@@ -911,80 +911,89 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Tone = __webpack_require__(99);
 
 
-$(function () {
-  $('body').on('mousedown', function () {
-    return window.mousedown = true;
-  });
-  $('body').on('mouseup', function () {
-    return window.mousedown = false;
-  });
-  var grid = $('#grid');
+$w(function () {
+  var grid = $w('#grid');
+
   for (var c = 0; c < 16; c++) {
-    var column = $('<ul>');
+    var column = $w('<ul>');
     column.addClass('col-' + c);
 
-    for (var r = 0; r < 15; r++) {
-      var space = $('<li>');
-      space.attr('pitch', r);
-      space.attr('col', c);
+    var _loop = function _loop(r) {
+      var space = $w('<li>');
+      space.attr('pitch', r.toString());
+      space.attr('col', c.toString());
       var classes = ['row-' + r, 'hue-' + r % 7, 'unselected'];
       if (r % 7 === 0) classes.push('octave');
       if (r % 7 === 3) classes.push('fifth');
-      space.addClass(classes.join(' '));
-      space.on('mousedown', triggerToggle);
-      space.on('mouseenter', triggerToggle);
-      column.append(space);
-    }
+      classes.forEach(function (className) {
+        return space.addClass(className);
+      });
 
+      column.append(space);
+    };
+
+    for (var r = 0; r < 15; r++) {
+      _loop(r);
+    }
     grid.append(column);
   }
 
-  var loopBar = $('<div>');
+  var loopBar = $w('<div>');
   loopBar.addClass("loop-bar");
   loopBar.css('left', "-6.25%");
   grid.append(loopBar);
 
-  var footer = $('footer');
-
-  var playButton = $('<button>');
+  var playButton = $w('<button>');
   playButton.addClass("play");
   playButton.html('▶︎');
-  playButton.on('click', togglePlay);
-  footer.append(playButton);
 
-  var modeButton = $('<button>');
+  var modeButton = $w('<button>');
   modeButton.addClass("major");
   modeButton.html('M');
-  modeButton.on('click', toggleMode);
-  footer.append(modeButton);
 
-  var clearButton = $('<button>');
+  var clearButton = $w('<button>');
   clearButton.addClass("clear");
   clearButton.html('C');
-  clearButton.on('click', clear);
-  footer.append(clearButton);
 
-  var demoButton = $('<button>');
+  var demoButton = $w('<button>');
   demoButton.addClass("demo");
   demoButton.html('D');
-  demoButton.on('click', demo);
+
+  var footer = $w('footer');
+
+  footer.append(playButton);
+  footer.append(modeButton);
+  footer.append(clearButton);
   footer.append(demoButton);
 
-  window.loopBar = loopBar;
-  window.playButton = playButton;
-  window.demoSpaces = (0, _constants.demoSpaces)();
+  $w('body').on('mousedown', function () {
+    return window.mousedown = true;
+  });
+  $w('body').on('mouseup', function () {
+    return window.mousedown = false;
+  });
+  grid.on('mouseleave', function () {
+    return window.mousedown = false;
+  });
+  grid.on('mousedown', triggerToggle);
+  grid.on('mouseover', triggerToggle);
+  $w('.play').on('click', togglePlay);
+  $w('.major').on('click', toggleMode);
+  $w('.clear').on('click', clear);
+  $w('.demo').on('click', demo);
 });
 
 Tone.Transport.scheduleRepeat(function (time) {
   Tone.Draw.schedule(function () {
-    var startLeft = parseFloat(window.loopBar[0].style.left);
+    var loopBar = $w('.loop-bar');
+    var startLeft = parseFloat(loopBar.css('left'));
     var newLeft = (startLeft + .125) % 100;
-    window.loopBar.css('left', '+' + newLeft + '%');
+    loopBar.css('left', '+' + newLeft + '%');
   }, time);
 }, "8n / 50");
 
 var resetLoop = Tone.Transport.schedule(function (time) {
-  window.loopBar.css('left', 0);
+  $w('.loop-bar').css('left', '0');
 }, 0);
 
 Tone.Transport.bpm.value = 120;
@@ -998,24 +1007,24 @@ var eventIds = {};
 var synth = new Tone.PolySynth(16).toMaster();
 
 var triggerToggle = function triggerToggle(e) {
-  if (!window.mousedown && e.type === 'mouseenter') return;
-  toggleSpace($(e.currentTarget));
+  if (!window.mousedown && e.type === 'mouseover') return;
+  toggleSpace($w(e.target));
 };
 
 var toggleSpace = function toggleSpace(space) {
-  if (space.hasClass('unselected') && window.playButton.hasClass('play')) {
+  if (space.hasClass('unselected') && $w('button:first-child').hasClass('play')) {
     synth.triggerAttackRelease(_constants.pitches[window.mode][space.attr('pitch')], '8n');
   }
   updateSequenceMap(space);
-  space.toggleClass('unselected selected');
   scheduleNotes(space.attr('col'));
+  space.toggleClass('unselected');
+  space.toggleClass('selected');
 };
 
 var updateSequenceMap = function updateSequenceMap(space) {
   var col = space.attr('col');
   var pitch = _constants.pitches[window.mode][space.attr('pitch')];
   if (space.hasClass('unselected')) {
-
     seqMap[col][pitch] = true;
   } else {
     delete seqMap[col][pitch];
@@ -1033,7 +1042,7 @@ var scheduleNotes = function scheduleNotes(col) {
 
 var toggleMode = function toggleMode(e) {
   updateSequenceModality();
-  var button = $(e.currentTarget);
+  var button = $w(e.currentTarget);
   if (button.hasClass('major')) {
     button.html('m');
     window.mode = 'minor';
@@ -1041,7 +1050,8 @@ var toggleMode = function toggleMode(e) {
     button.html('M');
     window.mode = 'major';
   }
-  button.toggleClass('minor major');
+  button.toggleClass('minor');
+  button.toggleClass('major');
 };
 
 var updateSequenceModality = function updateSequenceModality() {
@@ -1061,35 +1071,38 @@ var updateSequenceModality = function updateSequenceModality() {
   }
 };
 
-var togglePlay = function togglePlay() {
-  window.playButton.hasClass('play') ? play() : pause();
+var togglePlay = function togglePlay(e) {
+  var button = $w(e.currentTarget);
+  button.hasClass('play') ? play(button) : pause(button);
 };
 
-var play = function play() {
-  window.loopBar.css('left', 0);
+var play = function play(button) {
+  $w('.loop-bar').css('left', '0');
   Tone.Transport.start('+0.3');
-  window.playButton[0].className = "pause";
-  window.playButton.html('🁢 🁢');
+  button.nodes[0].className = "pause";
+  button.html('🁢 🁢');
 };
 
-var pause = function pause() {
+var pause = function pause(button) {
   clearInterval(window.loopId);
-  window.loopBar.css('left', '-6.25%');
+  $w('.loop-bar').css('left', '-6.25%');
   Tone.Transport.stop();
-  window.playButton[0].className = "play";
-  window.playButton.html('▶︎');
+  button.nodes[0].className = "play";
+  button.html('▶︎');
 };
 
 var clear = function clear() {
   resetGrid();
   clearMap();
   clearEvents();
-  pause();
-  window.loopBar.css('left', "-6.25%");
+  pause($w('button:first-child'));
+  $w('.loop-bar').css('left', "-6.25%");
 };
 
 var resetGrid = function resetGrid() {
-  $('.selected').toggleClass('selected unselected');
+  var selected = $w('.selected');
+  selected.toggleClass('selected');
+  selected.toggleClass('unselected');
 };
 
 var clearMap = function clearMap() {
@@ -1104,28 +1117,28 @@ var clearEvents = function clearEvents() {
 };
 
 var demoText = function demoText() {
-  var message = $('<h1>');
+  var message = $w('<h1>');
   message.addClass("demo-text");
   message.html("A tune just for you...");
-  $('#grid').append(message);
+  $w('#grid').append(message);
   setTimeout(function () {
     return message.html("Let's go!");
   }, 100 * 45);
   setTimeout(function () {
-    return $('.demo-text').remove();
+    return $w('.demo-text').remove();
   }, 100 * 50);
 };
 
 var demo = function demo() {
   clear();
-  window.demoSpaces.forEach(function (space, i) {
+  (0, _constants.demoSpaces)().forEach(function (space, i) {
     setTimeout(function () {
       return toggleSpace(space);
     }, 100 * i);
   });
   demoText();
   setTimeout(function () {
-    return play();
+    return play($w('button:first-child'));
   }, 100 * 50);
 };
 
@@ -3386,7 +3399,7 @@ var intervals = exports.intervals = {
 };
 
 var demoSpaces = exports.demoSpaces = function demoSpaces() {
-  return [$('.col-0 > .row-14'), $('.col-0 > .row-12'), $('.col-1 > .row-5'), $('.col-1 > .row-1'), $('.col-2 > .row-10'), $('.col-2 > .row-6'), $('.col-2 > .row-3'), $('.col-3 > .row-14'), $('.col-3 > .row-12'), $('.col-3 > .row-5'), $('.col-4 > .row-3'), $('.col-4 > .row-1'), $('.col-5 > .row-10'), $('.col-5 > .row-6'), $('.col-6 > .row-14'), $('.col-6 > .row-12'), $('.col-6 > .row-5'), $('.col-6 > .row-3'), $('.col-7 > .row-10'), $('.col-7 > .row-1'), $('.col-8 > .row-13'), $('.col-8 > .row-8'), $('.col-8 > .row-2'), $('.col-8 > .row-0'), $('.col-9 > .row-3'), $('.col-9 > .row-1'), $('.col-10 > .row-10'), $('.col-10 > .row-5'), $('.col-10 > .row-2'), $('.col-11 > .row-13'), $('.col-11 > .row-8'), $('.col-11 > .row-3'), $('.col-12 > .row-9'), $('.col-12 > .row-3'), $('.col-13 > .row-10'), $('.col-13 > .row-7'), $('.col-13 > .row-5'), $('.col-13 > .row-2'), $('.col-14 > .row-13'), $('.col-14 > .row-9'), $('.col-14 > .row-6'), $('.col-14 > .row-1'), $('.col-15 > .row-10'), $('.col-15 > .row-8'), $('.col-15 > .row-6')];
+  return [$w('.col-0 > .row-14'), $w('.col-0 > .row-12'), $w('.col-1 > .row-5'), $w('.col-1 > .row-1'), $w('.col-2 > .row-10'), $w('.col-2 > .row-6'), $w('.col-2 > .row-3'), $w('.col-3 > .row-14'), $w('.col-3 > .row-12'), $w('.col-3 > .row-5'), $w('.col-4 > .row-3'), $w('.col-4 > .row-1'), $w('.col-5 > .row-10'), $w('.col-5 > .row-6'), $w('.col-6 > .row-14'), $w('.col-6 > .row-12'), $w('.col-6 > .row-5'), $w('.col-6 > .row-3'), $w('.col-7 > .row-10'), $w('.col-7 > .row-1'), $w('.col-8 > .row-13'), $w('.col-8 > .row-8'), $w('.col-8 > .row-2'), $w('.col-8 > .row-0'), $w('.col-9 > .row-3'), $w('.col-9 > .row-1'), $w('.col-10 > .row-10'), $w('.col-10 > .row-5'), $w('.col-10 > .row-2'), $w('.col-11 > .row-13'), $w('.col-11 > .row-8'), $w('.col-11 > .row-3'), $w('.col-12 > .row-9'), $w('.col-12 > .row-3'), $w('.col-13 > .row-10'), $w('.col-13 > .row-7'), $w('.col-13 > .row-5'), $w('.col-13 > .row-2'), $w('.col-14 > .row-13'), $w('.col-14 > .row-9'), $w('.col-14 > .row-6'), $w('.col-14 > .row-1'), $w('.col-15 > .row-10'), $w('.col-15 > .row-8'), $w('.col-15 > .row-6')];
 };
 
 /***/ }),
