@@ -900,71 +900,31 @@ module.exports = identity;
 "use strict";
 
 
-var _merge = __webpack_require__(30);
-
-var _merge2 = _interopRequireDefault(_merge);
-
 var _constants = __webpack_require__(98);
+
+var _grid = __webpack_require__(101);
+
+var _footer = __webpack_require__(100);
+
+var _footer2 = _interopRequireDefault(_footer);
+
+var _loop_bar = __webpack_require__(102);
+
+var _loop_bar2 = _interopRequireDefault(_loop_bar);
+
+var _play_functions = __webpack_require__(104);
+
+var _sequence = __webpack_require__(103);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Tone = __webpack_require__(99);
-
-
 $w(function () {
-  var grid = $w('#grid');
+  var grid = (0, _grid.createGrid)();
+  var footer = (0, _footer2.default)();
+  var loopBar = (0, _loop_bar2.default)();
 
-  for (var c = 0; c < 16; c++) {
-    var column = $w('<ul>');
-    column.addClass('col-' + c);
-
-    var _loop = function _loop(r) {
-      var space = $w('<li>');
-      space.attr('pitch', r.toString());
-      space.attr('col', c.toString());
-      var classes = ['row-' + r, 'hue-' + r % 7, 'unselected'];
-      if (r % 7 === 0) classes.push('octave');
-      if (r % 7 === 3) classes.push('fifth');
-      classes.forEach(function (className) {
-        return space.addClass(className);
-      });
-
-      column.append(space);
-    };
-
-    for (var r = 0; r < 15; r++) {
-      _loop(r);
-    }
-    grid.append(column);
-  }
-
-  var loopBar = $w('<div>');
-  loopBar.addClass("loop-bar");
-  loopBar.css('left', "-6.25%");
   grid.append(loopBar);
-
-  var playButton = $w('<button>');
-  playButton.addClass("play");
-  playButton.html('▶︎');
-
-  var modeButton = $w('<button>');
-  modeButton.addClass("major");
-  modeButton.html('M');
-
-  var clearButton = $w('<button>');
-  clearButton.addClass("clear");
-  clearButton.html('C');
-
-  var demoButton = $w('<button>');
-  demoButton.addClass("demo");
-  demoButton.html('D');
-
-  var footer = $w('footer');
-
-  footer.append(playButton);
-  footer.append(modeButton);
-  footer.append(clearButton);
-  footer.append(demoButton);
+  (0, _sequence.scheduleLoop)();
 
   $w('body').on('mousedown', function () {
     return window.mousedown = true;
@@ -972,39 +932,20 @@ $w(function () {
   $w('body').on('mouseup', function () {
     return window.mousedown = false;
   });
+
   grid.on('mouseleave', function () {
     return window.mousedown = false;
   });
   grid.on('mousedown', triggerToggle);
   grid.on('mouseover', triggerToggle);
-  $w('.play').on('click', togglePlay);
+
+  $w('.play').on('click', _play_functions.togglePlay);
   $w('.major').on('click', toggleMode);
   $w('.clear').on('click', clear);
   $w('.demo').on('click', demo);
 });
 
-Tone.Transport.scheduleRepeat(function (time) {
-  Tone.Draw.schedule(function () {
-    var loopBar = $w('.loop-bar');
-    var startLeft = parseFloat(loopBar.css('left'));
-    var newLeft = (startLeft + .125) % 100;
-    loopBar.css('left', '+' + newLeft + '%');
-  }, time);
-}, "8n / 50");
-
-var resetLoop = Tone.Transport.schedule(function (time) {
-  $w('.loop-bar').css('left', '0');
-}, 0);
-
-Tone.Transport.bpm.value = 120;
-Tone.Transport.loop = true;
-Tone.Transport.loopEnd = '2m';
 window.mode = 'major';
-
-var seqMap = (0, _merge2.default)({}, _constants.defaultMap);
-
-var eventIds = {};
-var synth = new Tone.PolySynth(16).toMaster();
 
 var triggerToggle = function triggerToggle(e) {
   if (!window.mousedown && e.type === 'mouseover') return;
@@ -1013,35 +954,16 @@ var triggerToggle = function triggerToggle(e) {
 
 var toggleSpace = function toggleSpace(space) {
   if (space.hasClass('unselected') && $w('button:first-child').hasClass('play')) {
-    synth.triggerAttackRelease(_constants.pitches[window.mode][space.attr('pitch')], '8n');
+    (0, _sequence.playPitch)(space.attr('pitch'));
   }
-  updateSequenceMap(space);
-  scheduleNotes(space.attr('col'));
+  (0, _sequence.updateSequenceMap)(space);
+  (0, _sequence.scheduleNotes)(space.attr('col'));
   space.toggleClass('unselected');
   space.toggleClass('selected');
 };
 
-var updateSequenceMap = function updateSequenceMap(space) {
-  var col = space.attr('col');
-  var pitch = _constants.pitches[window.mode][space.attr('pitch')];
-  if (space.hasClass('unselected')) {
-    seqMap[col][pitch] = true;
-  } else {
-    delete seqMap[col][pitch];
-  }
-};
-
-var scheduleNotes = function scheduleNotes(col) {
-  if (eventIds[col]) {
-    Tone.Transport.clear(eventIds[col]);
-  }
-  eventIds[col] = Tone.Transport.schedule(function (time) {
-    synth.triggerAttackRelease(Object.keys(seqMap[col]), '8n');
-  }, col + '*8n');
-};
-
 var toggleMode = function toggleMode(e) {
-  updateSequenceModality();
+  (0, _sequence.updateSequenceModality)();
   var button = $w(e.currentTarget);
   if (button.hasClass('major')) {
     button.html('m');
@@ -1054,69 +976,26 @@ var toggleMode = function toggleMode(e) {
   button.toggleClass('major');
 };
 
-var updateSequenceModality = function updateSequenceModality() {
-  var newMode = window.mode === 'major' ? 'minor' : 'major';
-  for (var col = 0; col < 16; col++) {
-    var column = seqMap[col];
-    var adjusted = false;
-    for (var i = 0; i < 4; i++) {
-      var pitch = _constants.intervals[window.mode][i];
-      if (column[pitch]) {
-        delete column[pitch];
-        column[_constants.intervals[newMode][i]] = true;
-        adjusted = true;
-      }
-    }
-    if (adjusted) scheduleNotes(col);
-  }
-};
-
-var togglePlay = function togglePlay(e) {
-  var button = $w(e.currentTarget);
-  button.hasClass('play') ? play(button) : pause(button);
-};
-
-var play = function play(button) {
-  $w('.loop-bar').css('left', '0');
-  Tone.Transport.start('+0.3');
-  button.nodes[0].className = "pause";
-  button.html('🁢 🁢');
-};
-
-var pause = function pause(button) {
-  clearInterval(window.loopId);
-  $w('.loop-bar').css('left', '-6.25%');
-  Tone.Transport.stop();
-  button.nodes[0].className = "play";
-  button.html('▶︎');
-};
-
 var clear = function clear() {
-  resetGrid();
-  clearMap();
-  clearEvents();
-  pause($w('button:first-child'));
-  $w('.loop-bar').css('left', "-6.25%");
+  (0, _grid.resetGrid)();
+  (0, _sequence.clearSequence)();
+  (0, _play_functions.pause)($w('button:first-child'));
 };
 
-var resetGrid = function resetGrid() {
-  var selected = $w('.selected');
-  selected.toggleClass('selected');
-  selected.toggleClass('unselected');
-};
-
-var clearMap = function clearMap() {
-  return seqMap = (0, _merge2.default)({}, _constants.defaultMap);
-};
-
-var clearEvents = function clearEvents() {
-  Object.values(eventIds).forEach(function (event) {
-    return Tone.Transport.clear(event);
+var demo = function demo() {
+  clear();
+  (0, _constants.demoSpaces)().forEach(function (space, i) {
+    setTimeout(function () {
+      return toggleSpace(space);
+    }, 100 * i);
   });
-  eventIds = {};
+  displayDemoText();
+  setTimeout(function () {
+    return (0, _play_functions.play)($w('button:first-child'));
+  }, 100 * 50);
 };
 
-var demoText = function demoText() {
+var displayDemoText = function displayDemoText() {
   var message = $w('<h1>');
   message.addClass("demo-text");
   message.html("A tune just for you...");
@@ -1128,23 +1007,6 @@ var demoText = function demoText() {
     return $w('.demo-text').remove();
   }, 100 * 50);
 };
-
-var demo = function demo() {
-  clear();
-  (0, _constants.demoSpaces)().forEach(function (space, i) {
-    setTimeout(function () {
-      return toggleSpace(space);
-    }, 100 * i);
-  });
-  demoText();
-  setTimeout(function () {
-    return play($w('button:first-child'));
-  }, 100 * 50);
-};
-
-window.defaultMap = _constants.defaultMap;
-window.tone = Tone;
-window.seqMap = seqMap;
 
 /***/ }),
 /* 30 */
@@ -25845,6 +25707,248 @@ var __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory){
 	
 	return Tone;
 }));
+
+/***/ }),
+/* 100 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function createFooter() {
+  var playButton = $w('<button>');
+  playButton.addClass("play");
+  playButton.html('▶︎');
+
+  var modeButton = $w('<button>');
+  modeButton.addClass("major");
+  modeButton.html('M');
+
+  var clearButton = $w('<button>');
+  clearButton.addClass("clear");
+  clearButton.html('C');
+
+  var demoButton = $w('<button>');
+  demoButton.addClass("demo");
+  demoButton.html('D');
+
+  var footer = $w('footer');
+
+  footer.append(playButton);
+  footer.append(modeButton);
+  footer.append(clearButton);
+  footer.append(demoButton);
+
+  return footer;
+}
+
+exports.default = createFooter;
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var createGrid = exports.createGrid = function createGrid() {
+  var grid = $w('#grid');
+
+  for (var c = 0; c < 16; c++) {
+    var column = $w('<ul>');
+    column.addClass('col-' + c);
+
+    var _loop = function _loop(r) {
+      var space = $w('<li>');
+      space.attr('pitch', r.toString());
+      space.attr('col', c.toString());
+      var classes = ['row-' + r, 'hue-' + r % 7, 'unselected'];
+      if (r % 7 === 0) classes.push('octave');
+      if (r % 7 === 3) classes.push('fifth');
+      classes.forEach(function (className) {
+        return space.addClass(className);
+      });
+
+      column.append(space);
+    };
+
+    for (var r = 0; r < 15; r++) {
+      _loop(r);
+    }
+    grid.append(column);
+  }
+  return grid;
+};
+
+var resetGrid = exports.resetGrid = function resetGrid() {
+  var selected = $w('.selected');
+  selected.toggleClass('selected');
+  selected.toggleClass('unselected');
+};
+
+/***/ }),
+/* 102 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var createLoopBar = function createLoopBar() {
+  var loopBar = $w('<div>');
+  loopBar.addClass("loop-bar");
+  loopBar.css('left', "-6.25%");
+
+  return loopBar;
+};
+
+exports.default = createLoopBar;
+
+/***/ }),
+/* 103 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateSequenceModality = exports.clearSequence = exports.scheduleNotes = exports.updateSequenceMap = exports.scheduleLoop = exports.playPitch = exports.transport = undefined;
+
+var _merge = __webpack_require__(30);
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _constants = __webpack_require__(98);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Tone = __webpack_require__(99);
+
+
+Tone.Transport.bpm.value = 120;
+Tone.Transport.loop = true;
+Tone.Transport.loopEnd = '2m';
+
+var transport = exports.transport = Tone.Transport;
+
+var synth = new Tone.PolySynth(16).toMaster();
+
+var seqMap = (0, _merge2.default)({}, _constants.defaultMap);
+var eventIds = {};
+
+var playPitch = exports.playPitch = function playPitch(pitch) {
+  synth.triggerAttackRelease(_constants.pitches[window.mode][pitch], '8n');
+};
+
+var scheduleLoop = exports.scheduleLoop = function scheduleLoop() {
+  var loopBar = $w('.loop-bar');
+  Tone.Transport.scheduleRepeat(function (time) {
+    Tone.Draw.schedule(function () {
+      var startLeft = parseFloat(loopBar.css('left'));
+      var newLeft = startLeft + .250;
+      loopBar.css('left', '+' + newLeft + '%');
+    }, time);
+  }, "8n / 25");
+
+  Tone.Transport.schedule(function (time) {
+    $w('.loop-bar').css('left', '0');
+  }, 0);
+};
+
+var updateSequenceMap = exports.updateSequenceMap = function updateSequenceMap(space) {
+  var col = space.attr('col');
+  var pitch = _constants.pitches[window.mode][space.attr('pitch')];
+  if (space.hasClass('unselected')) {
+    seqMap[col][pitch] = true;
+  } else {
+    delete seqMap[col][pitch];
+  }
+};
+
+var scheduleNotes = exports.scheduleNotes = function scheduleNotes(col) {
+  if (eventIds[col]) {
+    Tone.Transport.clear(eventIds[col]);
+  }
+  eventIds[col] = Tone.Transport.schedule(function (time) {
+    synth.triggerAttackRelease(Object.keys(seqMap[col]), '8n');
+  }, col + '*8n');
+};
+
+var clearMap = function clearMap() {
+  return seqMap = (0, _merge2.default)({}, _constants.defaultMap);
+};
+
+var clearEvents = function clearEvents() {
+  Object.values(eventIds).forEach(function (event) {
+    return Tone.Transport.clear(event);
+  });
+  eventIds = {};
+};
+
+var clearSequence = exports.clearSequence = function clearSequence() {
+  clearMap();
+  clearEvents();
+};
+
+var updateSequenceModality = exports.updateSequenceModality = function updateSequenceModality() {
+  var newMode = window.mode === 'major' ? 'minor' : 'major';
+  for (var col = 0; col < 16; col++) {
+    var column = seqMap[col];
+    var adjusted = false;
+    for (var i = 0; i < 4; i++) {
+      var pitch = _constants.intervals[window.mode][i];
+      if (column[pitch]) {
+        delete column[pitch];
+        column[_constants.intervals[newMode][i]] = true;
+        adjusted = true;
+      }
+    }
+    if (adjusted) scheduleNotes(col);
+  }
+};
+
+/***/ }),
+/* 104 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.pause = exports.play = exports.togglePlay = undefined;
+
+var _sequence = __webpack_require__(103);
+
+var togglePlay = exports.togglePlay = function togglePlay(e) {
+  var button = $w(e.currentTarget);
+  button.hasClass('play') ? play(button) : pause(button);
+};
+
+var play = exports.play = function play(button) {
+  $w('.loop-bar').css('left', '0');
+  _sequence.transport.start('+0.3');
+  button.nodes[0].className = "pause";
+  button.html('🁢 🁢');
+};
+
+var pause = exports.pause = function pause(button) {
+  $w('.loop-bar').css('left', '-6.25%');
+  _sequence.transport.stop();
+  button.nodes[0].className = "play";
+  button.html('▶︎');
+};
 
 /***/ })
 /******/ ]);
