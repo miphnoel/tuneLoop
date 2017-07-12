@@ -7,20 +7,20 @@ function createFooter() {
   modeButton.addClass("major");
   modeButton.html('M');
 
-  const clearButton = $w('<button>');
-  clearButton.addClass("clear");
-  clearButton.html('C');
-
   const demoButton = $w('<button>');
   demoButton.addClass("demo");
   demoButton.html('D');
+
+  const clearButton = $w('<button>');
+  clearButton.addClass("clear");
+  clearButton.html('C');
 
   const footer = $w('footer');
 
   footer.append(playButton);
   footer.append(modeButton);
-  footer.append(clearButton);
   footer.append(demoButton);
+  footer.append(clearButton);
 
   return footer;
 }

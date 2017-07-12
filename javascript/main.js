@@ -1,4 +1,5 @@
 import { pitches, demoSpaces } from './constants';
+import displayInstructions from './instructions';
 import { createGrid, resetGrid } from './grid';
 import createFooter from './footer';
 import createLoopBar from './loop_bar';
@@ -30,6 +31,8 @@ $w(() => {
   $w('.major').on('click', toggleMode);
   $w('.clear').on('click', clear);
   $w('.demo').on('click', demo);
+
+  displayInstructions();
 });
 
 window.mode = 'major';

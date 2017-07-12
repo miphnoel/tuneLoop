@@ -172,3 +172,39 @@ button:hover {
   z-index: 3;
   align-self: center;
 }
+
+.instruction-frame {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.instruction-frame div {
+  background: white;
+  margin: auto;
+  border: 1px solid rgb(22, 168, 240);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  height: auto;
+  padding: 30px;
+  color: rgb(22, 168, 240);
+  font-size: 24px;
+  line-height: 2em;
+}
+
+.instruction-frame span {
+  color: white;
+  background: rgb(22, 168, 240);
+  border-radius: 50%;
+  padding: 10px 14px;
+  text-align: center;
+  font-weight: bold;
+}

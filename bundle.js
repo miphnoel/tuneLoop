@@ -902,6 +902,10 @@ module.exports = identity;
 
 var _constants = __webpack_require__(98);
 
+var _instructions = __webpack_require__(105);
+
+var _instructions2 = _interopRequireDefault(_instructions);
+
 var _grid = __webpack_require__(101);
 
 var _footer = __webpack_require__(100);
@@ -943,6 +947,8 @@ $w(function () {
   $w('.major').on('click', toggleMode);
   $w('.clear').on('click', clear);
   $w('.demo').on('click', demo);
+
+  (0, _instructions2.default)();
 });
 
 window.mode = 'major';
@@ -25727,20 +25733,20 @@ function createFooter() {
   modeButton.addClass("major");
   modeButton.html('M');
 
-  var clearButton = $w('<button>');
-  clearButton.addClass("clear");
-  clearButton.html('C');
-
   var demoButton = $w('<button>');
   demoButton.addClass("demo");
   demoButton.html('D');
+
+  var clearButton = $w('<button>');
+  clearButton.addClass("clear");
+  clearButton.html('C');
 
   var footer = $w('footer');
 
   footer.append(playButton);
   footer.append(modeButton);
-  footer.append(clearButton);
   footer.append(demoButton);
+  footer.append(clearButton);
 
   return footer;
 }
@@ -25972,6 +25978,58 @@ var pause = exports.pause = function pause(button) {
   _sequence.transport.stop();
   button.nodes[0].className = "play";
   button.html('▶︎');
+};
+
+/***/ }),
+/* 105 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = displayInstructions;
+function displayInstructions() {
+  var frame = $w('<div>');
+  frame.addClass('instruction-frame');
+
+  var instructions = $w('<div>');
+  instructions.append('<h3>Welcome to tuneLoop!</h3>');
+  instructions.append('<p>Click spaces to select/deselect notes,</p><br/>');
+  instructions.append('<p>Then click the <span>▶︎</span> button to hear your masterpiece!</p><br/>');
+  instructions.append('<p>(Click anywhere to continue)</p>');
+  frame.append(instructions);
+
+  $w('body').append(frame);
+  var instructionFrame = $w('.instruction-frame');
+  instructionFrame.on('click', furtherInstructions(instructionFrame));
+}
+
+var furtherInstructions = function furtherInstructions(instructionFrame) {
+  return function (e) {
+    e.stopPropagation();
+
+    var pageTwo = $w('<div>');
+    pageTwo.append("<p>The <span>M</span> button Modulates minor/major.</p><br/>");
+    pageTwo.append("<p>Click <span>D</span> to hear a Demo melody.</p><br/>");
+    pageTwo.append("<p>Careful! Clicking <span>C</span> will Clear every note.</p><br/>");
+    pageTwo.append('<p>(Click anywhere to continue)</p>');
+
+    instructionFrame.empty();
+    instructionFrame.append(pageTwo);
+
+    instructionFrame.off('click');
+    instructionFrame.on('click', closeInstructions(instructionFrame));
+  };
+};
+
+var closeInstructions = function closeInstructions(instructionFrame) {
+  return function (e) {
+    e.stopPropagation();
+    instructionFrame.remove();
+  };
 };
 
 /***/ })
