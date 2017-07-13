@@ -38,7 +38,6 @@ $w(() => {
 window.mode = 'major';
 const handleKeyPress = (e) => {
   e.preventDefault();
-  console.log(e.keyCode);
   switch (e.keyCode) {
     case 32:
     case 112:

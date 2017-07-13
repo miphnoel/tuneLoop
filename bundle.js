@@ -1157,7 +1157,6 @@ $w(function () {
 window.mode = 'major';
 var handleKeyPress = function handleKeyPress(e) {
   e.preventDefault();
-  console.log(e.keyCode);
   switch (e.keyCode) {
     case 32:
     case 112:
