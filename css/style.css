@@ -109,7 +109,7 @@ li.unselected:hover {
   background: transparent;
 }
 
-.unselected.octave {
+.unselected.root {
   background: rgba(78, 97, 216, 0.08);
 }
 

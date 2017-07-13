@@ -598,11 +598,12 @@ var transport = exports.transport = Tone.Transport;
 
 var synth = new Tone.PolySynth(16).toMaster();
 
-var seqMap = (0, _merge2.default)({}, _constants.defaultMap);
+var sequenceMap = (0, _merge2.default)({}, _constants.defaultMap);
 var eventIds = {};
 
 var playPitch = exports.playPitch = function playPitch(pitch) {
-  synth.triggerAttackRelease(_constants.pitches[window.mode][pitch], '8n');
+  var mode = $w('#mode').attr('class');
+  synth.triggerAttackRelease(_constants.pitches[mode][pitch], '8n');
 };
 
 var scheduleVisuals = exports.scheduleVisuals = function scheduleVisuals() {
@@ -645,25 +646,23 @@ var scheduleHighlights = function scheduleHighlights() {
 
 var updateSequenceMap = exports.updateSequenceMap = function updateSequenceMap(space) {
   var col = space.attr('col');
-  var pitch = _constants.pitches[window.mode][space.attr('pitch')];
-  if (space.hasClass('unselected')) {
-    seqMap[col][pitch] = true;
-  } else {
-    delete seqMap[col][pitch];
-  }
+  var mode = $w('#mode').attr('class');
+  var pitch = _constants.pitches[mode][space.attr('pitch')];
+  space.hasClass('selected') ? sequenceMap[col][pitch] = true : delete sequenceMap[col][pitch];
 };
 
 var scheduleNotes = exports.scheduleNotes = function scheduleNotes(col) {
   if (eventIds[col]) {
     Tone.Transport.clear(eventIds[col]);
   }
+
   eventIds[col] = Tone.Transport.schedule(function (time) {
-    synth.triggerAttackRelease(Object.keys(seqMap[col]), '8n');
+    synth.triggerAttackRelease(Object.keys(sequenceMap[col]), '8n');
   }, col + '*8n');
 };
 
 var clearMap = function clearMap() {
-  return seqMap = (0, _merge2.default)({}, _constants.defaultMap);
+  return sequenceMap = (0, _merge2.default)({}, _constants.defaultMap);
 };
 
 var clearEvents = function clearEvents() {
@@ -678,13 +677,12 @@ var clearSequence = exports.clearSequence = function clearSequence() {
   clearEvents();
 };
 
-var updateSequenceModality = exports.updateSequenceModality = function updateSequenceModality() {
-  var newMode = window.mode === 'major' ? 'minor' : 'major';
+var updateSequenceModality = exports.updateSequenceModality = function updateSequenceModality(oldMode, newMode) {
   for (var _col = 0; _col < 16; _col++) {
-    var column = seqMap[_col];
+    var column = sequenceMap[_col];
     var adjusted = false;
     for (var i = 0; i < 4; i++) {
-      var pitch = _constants.intervals[window.mode][i];
+      var pitch = _constants.intervals[oldMode][i];
       if (column[pitch]) {
         delete column[pitch];
         column[_constants.intervals[newMode][i]] = true;
@@ -1127,7 +1125,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $w(function () {
   var body = $w('body');
-  body.append("<header><img src='./logo.png' /></header>");
+  body.append("<header><img src='./images/logo.png' /></header>");
   var grid = (0, _grid.createGrid)();
   (0, _footer2.default)();
   (0, _loop_bar2.default)();
@@ -1154,7 +1152,6 @@ $w(function () {
   (0, _instructions2.default)();
 });
 
-window.mode = 'major';
 var handleKeyPress = function handleKeyPress(e) {
   e.preventDefault();
   switch (e.keyCode) {
@@ -1182,27 +1179,29 @@ var triggerToggle = function triggerToggle(e) {
 };
 
 var toggleSpace = function toggleSpace(space) {
-  if (space.hasClass('unselected') && $w('button:first-child').hasClass('play')) {
+  if (space.hasClass('unselected') && $w('#play').hasClass('play')) {
     (0, _sequence.playPitch)(space.attr('pitch'));
   }
-  (0, _sequence.updateSequenceMap)(space);
-  (0, _sequence.scheduleNotes)(space.attr('col'));
   space.toggleClass('unselected');
   space.toggleClass('selected');
+  (0, _sequence.updateSequenceMap)(space);
+  (0, _sequence.scheduleNotes)(space.attr('col'));
 };
 
 var toggleMode = function toggleMode() {
-  (0, _sequence.updateSequenceModality)();
   var button = $w('#mode');
-  if (button.hasClass('major')) {
+  var oldMode = button.attr('class');
+
+  if (oldMode === 'major') {
+    button.attr('class', 'minor');
     button.html('m');
-    window.mode = 'minor';
   } else {
+    button.attr('class', 'major');
     button.html('M');
-    window.mode = 'major';
   }
-  button.toggleClass('minor');
-  button.toggleClass('major');
+
+  var newMode = button.attr('class');
+  (0, _sequence.updateSequenceModality)(oldMode, newMode);
 };
 
 var clear = function clear() {
@@ -1255,7 +1254,7 @@ function displayInstructions() {
 
   var instructions = $w('<div>');
   instructions.append('<h3>Welcome to tuneLoop!</h3>');
-  instructions.append('<p>Click spaces to select/deselect notes,</p><br/>');
+  instructions.append('<p>Click (or drag through) spaces to select/deselect notes,</p><br/>');
   instructions.append('<p>Then click the <span>▶︎</span> button to hear your masterpiece!</p><br/>');
   instructions.append('<p>(Click anywhere to continue)</p>');
   frame.append(instructions);
@@ -1270,9 +1269,10 @@ var furtherInstructions = function furtherInstructions(instructionFrame) {
     e.stopPropagation();
 
     var pageTwo = $w('<div>');
-    pageTwo.append("<p>The <span>M</span> button Modulates minor/major.</p><br/>");
-    pageTwo.append("<p>Click <span>D</span> to hear a Demo melody.</p><br/>");
-    pageTwo.append("<p>Careful! Clicking <span>C</span> will Clear every note.</p><br/>");
+    pageTwo.append("<p><span>M</span> Modulates between minor and major.</p><br/>");
+    pageTwo.append("<p><span>D</span> plays a Demo melody.</p><br/>");
+    pageTwo.append("<p><span>C</span> will Clear every note.</p><br/>");
+    pageTwo.append("<p>You can also play or pause the loop with the [spacebar] or [P] key.");
     pageTwo.append('<p>(Click anywhere to continue)</p>');
 
     instructionFrame.empty();
@@ -1313,7 +1313,7 @@ var createGrid = exports.createGrid = function createGrid() {
       space.attr('pitch', r.toString());
       space.attr('col', c.toString());
       var classes = ['row-' + r, 'hue-' + r % 7, 'unselected'];
-      if (r % 7 === 0) classes.push('octave');
+      if (r % 7 === 0) classes.push('root');
       if (r % 7 === 3) classes.push('fifth');
       classes.forEach(function (className) {
         return space.addClass(className);

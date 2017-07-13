@@ -11,11 +11,12 @@ export const transport = Tone.Transport;
 
 const synth = new Tone.PolySynth(16).toMaster();
 
-let seqMap = merge({}, defaultMap);
+let sequenceMap = merge({}, defaultMap);
 let eventIds = {};
 
 export const playPitch = (pitch) => {
-  synth.triggerAttackRelease(pitches[window.mode][pitch], '8n');
+  const mode = $w('#mode').attr('class');
+  synth.triggerAttackRelease(pitches[mode][pitch], '8n');
 }
 
 export const scheduleVisuals = () => {
@@ -54,24 +55,22 @@ const scheduleHighlights = () => {
 
 export const updateSequenceMap = (space) => {
   const col = space.attr('col');
-  const pitch = pitches[window.mode][space.attr('pitch')];
-  if (space.hasClass('unselected')) {
-    seqMap[col][pitch] = true;
-  } else {
-    delete seqMap[col][pitch];
-  }
+  const mode = $w('#mode').attr('class');
+  const pitch = pitches[mode][space.attr('pitch')];
+  space.hasClass('selected')
+    ? sequenceMap[col][pitch] = true
+    : delete sequenceMap[col][pitch];
 };
 
 export const scheduleNotes = (col) => {
-  if (eventIds[col]) {
-    Tone.Transport.clear(eventIds[col]);
-  }
+  if (eventIds[col]) { Tone.Transport.clear(eventIds[col]); }
+
   eventIds[col] = Tone.Transport.schedule(function(time){
-    synth.triggerAttackRelease(Object.keys(seqMap[col]), '8n');
-  }, `${col}*8n`);
+    synth.triggerAttackRelease(Object.keys(sequenceMap[col]), '8n');
+    }, `${col}*8n`);
 };
 
-const clearMap = () => seqMap = merge({}, defaultMap);
+const clearMap = () => sequenceMap = merge({}, defaultMap);
 
 const clearEvents = () => {
   Object.values(eventIds).forEach(event =>
@@ -85,13 +84,12 @@ export const clearSequence = () => {
   clearEvents();
 }
 
-export const updateSequenceModality = () => {
-  const newMode = window.mode === 'major' ? 'minor' : 'major';
+export const updateSequenceModality = (oldMode, newMode) => {
   for (let col = 0; col < 16; col++) {
-    const column = seqMap[col];
+    const column = sequenceMap[col];
     let adjusted = false;
     for(let i = 0; i < 4; i++) {
-      let pitch = intervals[window.mode][i];
+      let pitch = intervals[oldMode][i];
       if (column[pitch]) {
         delete column[pitch];
         column[intervals[newMode][i]] = true;

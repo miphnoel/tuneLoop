@@ -11,7 +11,7 @@ export const createGrid = () => {
       space.attr('pitch', r.toString());
       space.attr('col', c.toString());
       let classes = [`row-${r}`, `hue-${r % 7}`, 'unselected'];
-      if (r % 7 === 0) classes.push('octave');
+      if (r % 7 === 0) classes.push('root');
       if (r % 7 === 3) classes.push('fifth');
       classes.forEach(className => space.addClass(className));
 

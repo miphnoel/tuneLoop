@@ -14,7 +14,7 @@ import { playPitch,
 
 $w(() => {
   const body = $w('body');
-  body.append("<header><img src='./logo.png' /></header>");
+  body.append("<header><img src='./images/logo.png' /></header>");
   const grid = createGrid();
   createFooter();
   createLoopBar();
@@ -35,7 +35,6 @@ $w(() => {
   displayInstructions();
 });
 
-window.mode = 'major';
 const handleKeyPress = (e) => {
   e.preventDefault();
   switch (e.keyCode) {
@@ -64,27 +63,29 @@ const triggerToggle = (e) => {
 
 const toggleSpace = (space) => {
   if (space.hasClass('unselected') &&
-      $w('button:first-child').hasClass('play')) {
+      $w('#play').hasClass('play')) {
     playPitch(space.attr('pitch'));
   }
-  updateSequenceMap(space);
-  scheduleNotes(space.attr('col'));
   space.toggleClass('unselected');
   space.toggleClass('selected');
+  updateSequenceMap(space);
+  scheduleNotes(space.attr('col'));
 };
 
 const toggleMode = () => {
-  updateSequenceModality();
   const button = $w('#mode');
-  if (button.hasClass('major')) {
+  const oldMode = button.attr('class');
+
+  if (oldMode === 'major') {
+    button.attr('class', 'minor');
     button.html('m');
-    window.mode = 'minor';
   } else {
+    button.attr('class', 'major');
     button.html('M');
-    window.mode = 'major';
   }
-  button.toggleClass('minor');
-  button.toggleClass('major');
+  
+  const newMode = button.attr('class');
+  updateSequenceModality(oldMode, newMode);
 };
 
 const clear = () => {
