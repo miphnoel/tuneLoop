@@ -1,7 +1,7 @@
 import { transport } from './sequence';
 
-export const togglePlay = (e) => {
-  let button = $w(e.currentTarget);
+export const togglePlay = () => {
+  let button = $w('#play');
   button.hasClass('play') ? play(button) : pause(button);
 };
 
@@ -14,7 +14,7 @@ export const play = (button) => {
 
 export const pause = (button) => {
   $w('.loop-bar').css('left', '-6.25%');
-  $w('.playing').toggleClass('playing');
+  $w('.highlight').toggleClass('highlight');
   transport.stop();
   button.nodes[0].className = "play";
   button.html('▶︎');

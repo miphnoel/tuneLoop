@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 31);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -104,7 +104,7 @@ module.exports = isObject;
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(16);
+var freeGlobal = __webpack_require__(18);
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -154,11 +154,11 @@ module.exports = isObjectLike;
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var listCacheClear = __webpack_require__(33),
-    listCacheDelete = __webpack_require__(34),
-    listCacheGet = __webpack_require__(35),
-    listCacheHas = __webpack_require__(36),
-    listCacheSet = __webpack_require__(37);
+var listCacheClear = __webpack_require__(40),
+    listCacheDelete = __webpack_require__(41),
+    listCacheGet = __webpack_require__(42),
+    listCacheHas = __webpack_require__(43),
+    listCacheSet = __webpack_require__(44);
 
 /**
  * Creates an list cache object.
@@ -262,9 +262,9 @@ module.exports = eq;
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(15),
-    getRawTag = __webpack_require__(45),
-    objectToString = __webpack_require__(46);
+var Symbol = __webpack_require__(17),
+    getRawTag = __webpack_require__(52),
+    objectToString = __webpack_require__(53);
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -308,7 +308,7 @@ module.exports = nativeCreate;
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isKeyable = __webpack_require__(60);
+var isKeyable = __webpack_require__(67);
 
 /**
  * Gets the data for `map`.
@@ -332,8 +332,8 @@ module.exports = getMapData;
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsNative = __webpack_require__(43),
-    getValue = __webpack_require__(50);
+var baseIsNative = __webpack_require__(50),
+    getValue = __webpack_require__(57);
 
 /**
  * Gets the native function at `key` of `object`.
@@ -398,7 +398,7 @@ module.exports = isFunction;
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var defineProperty = __webpack_require__(18);
+var defineProperty = __webpack_require__(20);
 
 /**
  * The base implementation of `assignValue` and `assignMergeValue` without
@@ -458,7 +458,7 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var isFunction = __webpack_require__(10),
-    isLength = __webpack_require__(23);
+    isLength = __webpack_require__(25);
 
 /**
  * Checks if `value` is array-like. A value is considered array-like if it's
@@ -496,6 +496,209 @@ module.exports = isArrayLike;
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var pitches = exports.pitches = {
+  major: {
+    14: "C3",
+    13: "D3",
+    12: "E3",
+    11: "F3",
+    10: "G3",
+    9: "A3",
+    8: "B3",
+    7: "C4",
+    6: "D4",
+    5: "E4",
+    4: "F4",
+    3: "G4",
+    2: "A4",
+    1: "B4",
+    0: "C5"
+  },
+  minor: {
+    14: "C3",
+    13: "D3",
+    12: "Eb3",
+    11: "F3",
+    10: "G3",
+    9: "Ab3",
+    8: "B3",
+    7: "C4",
+    6: "D4",
+    5: "Eb4",
+    4: "F4",
+    3: "G4",
+    2: "Ab4",
+    1: "B4",
+    0: "C5"
+  }
+};
+
+var defaultMap = exports.defaultMap = {
+  0: {},
+  1: {},
+  2: {},
+  3: {},
+  4: {},
+  5: {},
+  6: {},
+  7: {},
+  8: {},
+  9: {},
+  10: {},
+  11: {},
+  12: {},
+  13: {},
+  14: {},
+  15: {}
+};
+
+var intervals = exports.intervals = {
+  major: [pitches.major[2], pitches.major[5], pitches.major[9], pitches.major[12]],
+  minor: [pitches.minor[2], pitches.minor[5], pitches.minor[9], pitches.minor[12]]
+};
+
+var demoSpaces = exports.demoSpaces = function demoSpaces() {
+  return [$w('.col-0 > .row-14'), $w('.col-0 > .row-12'), $w('.col-1 > .row-5'), $w('.col-1 > .row-1'), $w('.col-2 > .row-10'), $w('.col-2 > .row-6'), $w('.col-2 > .row-3'), $w('.col-3 > .row-14'), $w('.col-3 > .row-12'), $w('.col-3 > .row-5'), $w('.col-4 > .row-3'), $w('.col-4 > .row-1'), $w('.col-5 > .row-10'), $w('.col-5 > .row-6'), $w('.col-6 > .row-14'), $w('.col-6 > .row-12'), $w('.col-6 > .row-5'), $w('.col-6 > .row-3'), $w('.col-7 > .row-10'), $w('.col-7 > .row-1'), $w('.col-8 > .row-13'), $w('.col-8 > .row-8'), $w('.col-8 > .row-2'), $w('.col-8 > .row-0'), $w('.col-9 > .row-3'), $w('.col-9 > .row-1'), $w('.col-10 > .row-10'), $w('.col-10 > .row-5'), $w('.col-10 > .row-2'), $w('.col-11 > .row-13'), $w('.col-11 > .row-8'), $w('.col-11 > .row-3'), $w('.col-12 > .row-9'), $w('.col-12 > .row-3'), $w('.col-13 > .row-10'), $w('.col-13 > .row-7'), $w('.col-13 > .row-5'), $w('.col-13 > .row-2'), $w('.col-14 > .row-13'), $w('.col-14 > .row-9'), $w('.col-14 > .row-6'), $w('.col-14 > .row-1'), $w('.col-15 > .row-10'), $w('.col-15 > .row-8'), $w('.col-15 > .row-6')];
+};
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateSequenceModality = exports.clearSequence = exports.scheduleNotes = exports.updateSequenceMap = exports.scheduleVisuals = exports.playPitch = exports.transport = undefined;
+
+var _merge = __webpack_require__(37);
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _constants = __webpack_require__(14);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Tone = __webpack_require__(105);
+
+
+Tone.Transport.bpm.value = 120;
+Tone.Transport.loop = true;
+Tone.Transport.loopEnd = '2m';
+
+var transport = exports.transport = Tone.Transport;
+
+var synth = new Tone.PolySynth(16).toMaster();
+
+var seqMap = (0, _merge2.default)({}, _constants.defaultMap);
+var eventIds = {};
+
+var playPitch = exports.playPitch = function playPitch(pitch) {
+  synth.triggerAttackRelease(_constants.pitches[window.mode][pitch], '8n');
+};
+
+var scheduleVisuals = exports.scheduleVisuals = function scheduleVisuals() {
+  scheduleLoop();
+  scheduleHighlights();
+};
+
+var scheduleLoop = function scheduleLoop() {
+  var loopBar = $w('.loop-bar');
+  Tone.Transport.scheduleRepeat(function (time) {
+    var startLeft = parseFloat(loopBar.css('left'));
+    var newLeft = startLeft + .250;
+    loopBar.css('left', '+' + newLeft + '%');
+  }, "8n / 25");
+
+  Tone.Transport.schedule(function (time) {
+    $w('.loop-bar').css('left', '0');
+  }, 0);
+};
+
+var scheduleHighlights = function scheduleHighlights() {
+  var _loop = function _loop(i) {
+    var col = $w('.col-' + i);
+    Tone.Transport.schedule(function (time) {
+      col.addClass('fade');
+      col.addClass('highlight');
+    }, 2 * i + '*16n');
+    Tone.Transport.schedule(function (time) {
+      col.removeClass('highlight');
+    }, 2 * i + 1 + '*16n');
+    Tone.Transport.schedule(function (time) {
+      col.removeClass('fade');
+    }, (2 * i + 2) % 32 + '*16n');
+  };
+
+  for (var i = 0; i < 16; i++) {
+    _loop(i);
+  }
+};
+
+var updateSequenceMap = exports.updateSequenceMap = function updateSequenceMap(space) {
+  var col = space.attr('col');
+  var pitch = _constants.pitches[window.mode][space.attr('pitch')];
+  if (space.hasClass('unselected')) {
+    seqMap[col][pitch] = true;
+  } else {
+    delete seqMap[col][pitch];
+  }
+};
+
+var scheduleNotes = exports.scheduleNotes = function scheduleNotes(col) {
+  if (eventIds[col]) {
+    Tone.Transport.clear(eventIds[col]);
+  }
+  eventIds[col] = Tone.Transport.schedule(function (time) {
+    synth.triggerAttackRelease(Object.keys(seqMap[col]), '8n');
+  }, col + '*8n');
+};
+
+var clearMap = function clearMap() {
+  return seqMap = (0, _merge2.default)({}, _constants.defaultMap);
+};
+
+var clearEvents = function clearEvents() {
+  Object.values(eventIds).forEach(function (event) {
+    return Tone.Transport.clear(event);
+  });
+  eventIds = {};
+};
+
+var clearSequence = exports.clearSequence = function clearSequence() {
+  clearMap();
+  clearEvents();
+};
+
+var updateSequenceModality = exports.updateSequenceModality = function updateSequenceModality() {
+  var newMode = window.mode === 'major' ? 'minor' : 'major';
+  for (var _col = 0; _col < 16; _col++) {
+    var column = seqMap[_col];
+    var adjusted = false;
+    for (var i = 0; i < 4; i++) {
+      var pitch = _constants.intervals[window.mode][i];
+      if (column[pitch]) {
+        delete column[pitch];
+        column[_constants.intervals[newMode][i]] = true;
+        adjusted = true;
+      }
+    }
+    if (adjusted) scheduleNotes(_col);
+  }
+};
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var getNative = __webpack_require__(9),
     root = __webpack_require__(1);
 
@@ -506,7 +709,7 @@ module.exports = Map;
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(1);
@@ -518,7 +721,7 @@ module.exports = Symbol;
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
@@ -526,10 +729,10 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 
 module.exports = freeGlobal;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(51)))
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseAssignValue = __webpack_require__(11),
@@ -555,7 +758,7 @@ module.exports = assignMergeValue;
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(9);
@@ -572,10 +775,10 @@ module.exports = defineProperty;
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var overArg = __webpack_require__(74);
+var overArg = __webpack_require__(81);
 
 /** Built-in value references. */
 var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -584,7 +787,7 @@ module.exports = getPrototype;
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -608,10 +811,10 @@ module.exports = isPrototype;
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsArguments = __webpack_require__(75),
+var baseIsArguments = __webpack_require__(82),
     isObjectLike = __webpack_require__(2);
 
 /** Used for built-in method references. */
@@ -650,7 +853,7 @@ module.exports = isArguments;
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports) {
 
 /**
@@ -682,7 +885,7 @@ module.exports = isArray;
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports) {
 
 /** Used as references for various `Number` constants. */
@@ -723,11 +926,11 @@ module.exports = isLength;
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(1),
-    stubFalse = __webpack_require__(77);
+    stubFalse = __webpack_require__(84);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -768,12 +971,12 @@ module.exports = isBuffer;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsTypedArray = __webpack_require__(79),
-    baseUnary = __webpack_require__(80),
-    nodeUtil = __webpack_require__(81);
+var baseIsTypedArray = __webpack_require__(86),
+    baseUnary = __webpack_require__(87),
+    nodeUtil = __webpack_require__(88);
 
 /* Node.js helper references. */
 var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -801,11 +1004,11 @@ module.exports = isTypedArray;
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayLikeKeys = __webpack_require__(85),
-    baseKeysIn = __webpack_require__(87),
+var arrayLikeKeys = __webpack_require__(92),
+    baseKeysIn = __webpack_require__(94),
     isArrayLike = __webpack_require__(13);
 
 /**
@@ -839,7 +1042,7 @@ module.exports = keysIn;
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports) {
 
 /** Used as references for various `Number` constants. */
@@ -867,7 +1070,7 @@ module.exports = isIndex;
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports) {
 
 /**
@@ -894,49 +1097,49 @@ module.exports = identity;
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _constants = __webpack_require__(98);
+var _constants = __webpack_require__(14);
 
-var _instructions = __webpack_require__(105);
+var _instructions = __webpack_require__(32);
 
 var _instructions2 = _interopRequireDefault(_instructions);
 
-var _grid = __webpack_require__(101);
+var _grid = __webpack_require__(33);
 
-var _footer = __webpack_require__(100);
+var _footer = __webpack_require__(34);
 
 var _footer2 = _interopRequireDefault(_footer);
 
-var _loop_bar = __webpack_require__(102);
+var _loop_bar = __webpack_require__(35);
 
 var _loop_bar2 = _interopRequireDefault(_loop_bar);
 
-var _play_functions = __webpack_require__(104);
+var _play_functions = __webpack_require__(36);
 
-var _sequence = __webpack_require__(103);
+var _sequence = __webpack_require__(15);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 $w(function () {
+  var body = $w('body');
+  body.append("<header><img src='./logo.png' /></header>");
   var grid = (0, _grid.createGrid)();
-  var footer = (0, _footer2.default)();
-  var loopBar = (0, _loop_bar2.default)();
-
-  grid.append(loopBar);
+  (0, _footer2.default)();
+  (0, _loop_bar2.default)();
   (0, _sequence.scheduleVisuals)();
 
-  $w('body').on('mousedown', function () {
+  body.on('mousedown', function () {
     return window.mousedown = true;
   });
-  $w('body').on('mouseup', function () {
+  body.on('mouseup', function () {
     return window.mousedown = false;
   });
-
+  document.onkeypress = handleKeyPress;
   grid.on('mouseleave', function () {
     return window.mousedown = false;
   });
@@ -952,6 +1155,27 @@ $w(function () {
 });
 
 window.mode = 'major';
+var handleKeyPress = function handleKeyPress(e) {
+  e.preventDefault();
+  console.log(e.keyCode);
+  switch (e.keyCode) {
+    case 32:
+    case 112:
+      (0, _play_functions.togglePlay)();
+      break;
+    case 109:
+      toggleMode();
+      break;
+    case 100:
+      demo();
+      break;
+    case 99:
+      clear();
+      break;
+    default:
+      return;
+  }
+};
 
 var triggerToggle = function triggerToggle(e) {
   if (!window.mousedown && e.type === 'mouseover') return;
@@ -968,9 +1192,9 @@ var toggleSpace = function toggleSpace(space) {
   space.toggleClass('selected');
 };
 
-var toggleMode = function toggleMode(e) {
+var toggleMode = function toggleMode() {
   (0, _sequence.updateSequenceModality)();
-  var button = $w(e.currentTarget);
+  var button = $w('#mode');
   if (button.hasClass('major')) {
     button.html('m');
     window.mode = 'minor';
@@ -985,7 +1209,7 @@ var toggleMode = function toggleMode(e) {
 var clear = function clear() {
   (0, _grid.resetGrid)();
   (0, _sequence.clearSequence)();
-  (0, _play_functions.pause)($w('button:first-child'));
+  (0, _play_functions.pause)($w('#play'));
 };
 
 var demo = function demo() {
@@ -1006,20 +1230,253 @@ var displayDemoText = function displayDemoText() {
   message.addClass("demo-text");
   message.html("A tune just for you...");
   $w('#grid').append(message);
+  var demoText = $w('.demo-text');
   setTimeout(function () {
-    return message.html("Let's go!");
+    return demoText.html("Let's go!");
   }, 100 * 45);
   setTimeout(function () {
-    return $w('.demo-text').remove();
+    return demoText.remove();
   }, 100 * 50);
 };
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseMerge = __webpack_require__(31),
-    createAssigner = __webpack_require__(89);
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = displayInstructions;
+function displayInstructions() {
+  var frame = $w('<div>');
+  frame.addClass('instruction-frame');
+
+  var instructions = $w('<div>');
+  instructions.append('<h3>Welcome to tuneLoop!</h3>');
+  instructions.append('<p>Click spaces to select/deselect notes,</p><br/>');
+  instructions.append('<p>Then click the <span>▶︎</span> button to hear your masterpiece!</p><br/>');
+  instructions.append('<p>(Click anywhere to continue)</p>');
+  frame.append(instructions);
+
+  $w('body').append(frame);
+  var instructionFrame = $w('.instruction-frame');
+  instructionFrame.on('click', furtherInstructions(instructionFrame));
+}
+
+var furtherInstructions = function furtherInstructions(instructionFrame) {
+  return function (e) {
+    e.stopPropagation();
+
+    var pageTwo = $w('<div>');
+    pageTwo.append("<p>The <span>M</span> button Modulates minor/major.</p><br/>");
+    pageTwo.append("<p>Click <span>D</span> to hear a Demo melody.</p><br/>");
+    pageTwo.append("<p>Careful! Clicking <span>C</span> will Clear every note.</p><br/>");
+    pageTwo.append('<p>(Click anywhere to continue)</p>');
+
+    instructionFrame.empty();
+    instructionFrame.append(pageTwo);
+
+    instructionFrame.off('click');
+    instructionFrame.on('click', closeInstructions(instructionFrame));
+  };
+};
+
+var closeInstructions = function closeInstructions(instructionFrame) {
+  return function (e) {
+    e.stopPropagation();
+    instructionFrame.remove();
+  };
+};
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var createGrid = exports.createGrid = function createGrid() {
+  var grid = $w('<div>');
+  grid.attr('id', 'grid');
+
+  for (var c = 0; c < 16; c++) {
+    var column = $w('<ul>');
+    column.addClass('col-' + c);
+
+    var _loop = function _loop(r) {
+      var space = $w('<li>');
+      space.attr('pitch', r.toString());
+      space.attr('col', c.toString());
+      var classes = ['row-' + r, 'hue-' + r % 7, 'unselected'];
+      if (r % 7 === 0) classes.push('octave');
+      if (r % 7 === 3) classes.push('fifth');
+      classes.forEach(function (className) {
+        return space.addClass(className);
+      });
+
+      column.append(space);
+    };
+
+    for (var r = 0; r < 15; r++) {
+      _loop(r);
+    }
+    grid.append(column);
+  }
+  $w('body').append(grid);
+  return $w('#grid');
+};
+
+var resetGrid = exports.resetGrid = function resetGrid() {
+  var selected = $w('.selected');
+  selected.toggleClass('selected');
+  selected.toggleClass('unselected');
+};
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function createFooter() {
+  var playButton = $w('<button>');
+  playButton.attr('id', 'play');
+  playButton.addClass("play");
+  playButton.html('▶︎');
+
+  var modeButton = $w('<button>');
+  modeButton.attr('id', 'mode');
+  modeButton.addClass("major");
+  modeButton.html('M');
+
+  var demoButton = $w('<button>');
+  demoButton.addClass("demo");
+  demoButton.html('D');
+
+  var clearButton = $w('<button>');
+  clearButton.addClass("clear");
+  clearButton.html('C');
+
+  var footer = $w('<footer>');
+
+  footer.append(playButton);
+  footer.append(modeButton);
+  footer.append(demoButton);
+  footer.append(clearButton);
+
+  createLinks(footer);
+  $w('body').append(footer);
+}
+
+function createLinks(footer) {
+  var links = $w('<div>');
+  links.addClass('links');
+
+  var gitLink = $w("<a>");
+  gitLink.attr('target', '_blank');
+  gitLink.attr('href', "https://www.github.com/miphnoel/tuneLoop");
+  var gitIcon = $w('<i>');
+  gitIcon.addClass('fa');
+  gitIcon.addClass('fa-github');
+  gitIcon.attr('aria-hidden', 'true');
+  gitLink.append(gitIcon);
+  links.append(gitLink);
+
+  var linkedInLink = $w('<a>');
+  linkedInLink.attr('target', '_blank');
+  linkedInLink.attr('href', "https://www.linkedin.com/in/michael-noel");
+  var linkedInIcon = $w('<i>');
+  linkedInIcon.addClass('fa');
+  linkedInIcon.addClass('fa-linkedin-square');
+  linkedInIcon.attr('aria-hidden', 'true');
+  linkedInLink.append(linkedInIcon);
+  links.append(linkedInLink);
+
+  var portfolioLink = $w('<a>');
+  portfolioLink.attr('target', '_blank');
+  portfolioLink.attr('href', "http://www.michaelnoel.us");
+  var portfolioIcon = $w('<i>');
+  portfolioIcon.addClass('fa');
+  portfolioIcon.addClass('fa-address-card');
+  portfolioIcon.attr('aria-hidden', 'true');
+  portfolioLink.append(portfolioIcon);
+  links.append(portfolioLink);
+
+  footer.append(links);
+}
+
+exports.default = createFooter;
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var createLoopBar = function createLoopBar() {
+  var loopBar = $w('<div>');
+  loopBar.addClass("loop-bar");
+  loopBar.css('left', "-6.25%");
+
+  $w('#grid').append(loopBar);
+};
+
+exports.default = createLoopBar;
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.pause = exports.play = exports.togglePlay = undefined;
+
+var _sequence = __webpack_require__(15);
+
+var togglePlay = exports.togglePlay = function togglePlay() {
+  var button = $w('#play');
+  button.hasClass('play') ? play(button) : pause(button);
+};
+
+var play = exports.play = function play(button) {
+  $w('.loop-bar').css('left', '0');
+  _sequence.transport.start('+0.3');
+  button.nodes[0].className = "pause";
+  button.html('🁢 🁢');
+};
+
+var pause = exports.pause = function pause(button) {
+  $w('.loop-bar').css('left', '-6.25%');
+  $w('.highlight').toggleClass('highlight');
+  _sequence.transport.stop();
+  button.nodes[0].className = "play";
+  button.html('▶︎');
+};
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseMerge = __webpack_require__(38),
+    createAssigner = __webpack_require__(96);
 
 /**
  * This method is like `_.assign` except that it recursively merges own and
@@ -1060,15 +1517,15 @@ module.exports = merge;
 
 
 /***/ }),
-/* 31 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Stack = __webpack_require__(32),
-    assignMergeValue = __webpack_require__(17),
-    baseFor = __webpack_require__(64),
-    baseMergeDeep = __webpack_require__(66),
+var Stack = __webpack_require__(39),
+    assignMergeValue = __webpack_require__(19),
+    baseFor = __webpack_require__(71),
+    baseMergeDeep = __webpack_require__(73),
     isObject = __webpack_require__(0),
-    keysIn = __webpack_require__(26);
+    keysIn = __webpack_require__(28);
 
 /**
  * The base implementation of `_.merge` without support for multiple sources.
@@ -1107,15 +1564,15 @@ module.exports = baseMerge;
 
 
 /***/ }),
-/* 32 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ListCache = __webpack_require__(3),
-    stackClear = __webpack_require__(38),
-    stackDelete = __webpack_require__(39),
-    stackGet = __webpack_require__(40),
-    stackHas = __webpack_require__(41),
-    stackSet = __webpack_require__(42);
+    stackClear = __webpack_require__(45),
+    stackDelete = __webpack_require__(46),
+    stackGet = __webpack_require__(47),
+    stackHas = __webpack_require__(48),
+    stackSet = __webpack_require__(49);
 
 /**
  * Creates a stack cache object to store key-value pairs.
@@ -1140,7 +1597,7 @@ module.exports = Stack;
 
 
 /***/ }),
-/* 33 */
+/* 40 */
 /***/ (function(module, exports) {
 
 /**
@@ -1159,7 +1616,7 @@ module.exports = listCacheClear;
 
 
 /***/ }),
-/* 34 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var assocIndexOf = __webpack_require__(4);
@@ -1200,7 +1657,7 @@ module.exports = listCacheDelete;
 
 
 /***/ }),
-/* 35 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var assocIndexOf = __webpack_require__(4);
@@ -1225,7 +1682,7 @@ module.exports = listCacheGet;
 
 
 /***/ }),
-/* 36 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var assocIndexOf = __webpack_require__(4);
@@ -1247,7 +1704,7 @@ module.exports = listCacheHas;
 
 
 /***/ }),
-/* 37 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var assocIndexOf = __webpack_require__(4);
@@ -1279,7 +1736,7 @@ module.exports = listCacheSet;
 
 
 /***/ }),
-/* 38 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ListCache = __webpack_require__(3);
@@ -1300,7 +1757,7 @@ module.exports = stackClear;
 
 
 /***/ }),
-/* 39 */
+/* 46 */
 /***/ (function(module, exports) {
 
 /**
@@ -1324,7 +1781,7 @@ module.exports = stackDelete;
 
 
 /***/ }),
-/* 40 */
+/* 47 */
 /***/ (function(module, exports) {
 
 /**
@@ -1344,7 +1801,7 @@ module.exports = stackGet;
 
 
 /***/ }),
-/* 41 */
+/* 48 */
 /***/ (function(module, exports) {
 
 /**
@@ -1364,12 +1821,12 @@ module.exports = stackHas;
 
 
 /***/ }),
-/* 42 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ListCache = __webpack_require__(3),
-    Map = __webpack_require__(14),
-    MapCache = __webpack_require__(51);
+    Map = __webpack_require__(16),
+    MapCache = __webpack_require__(58);
 
 /** Used as the size to enable large array optimizations. */
 var LARGE_ARRAY_SIZE = 200;
@@ -1404,13 +1861,13 @@ module.exports = stackSet;
 
 
 /***/ }),
-/* 43 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isFunction = __webpack_require__(10),
-    isMasked = __webpack_require__(47),
+    isMasked = __webpack_require__(54),
     isObject = __webpack_require__(0),
-    toSource = __webpack_require__(49);
+    toSource = __webpack_require__(56);
 
 /**
  * Used to match `RegExp`
@@ -1457,7 +1914,7 @@ module.exports = baseIsNative;
 
 
 /***/ }),
-/* 44 */
+/* 51 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1484,10 +1941,10 @@ module.exports = g;
 
 
 /***/ }),
-/* 45 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(15);
+var Symbol = __webpack_require__(17);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -1536,7 +1993,7 @@ module.exports = getRawTag;
 
 
 /***/ }),
-/* 46 */
+/* 53 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -1564,10 +2021,10 @@ module.exports = objectToString;
 
 
 /***/ }),
-/* 47 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var coreJsData = __webpack_require__(48);
+var coreJsData = __webpack_require__(55);
 
 /** Used to detect methods masquerading as native. */
 var maskSrcKey = (function() {
@@ -1590,7 +2047,7 @@ module.exports = isMasked;
 
 
 /***/ }),
-/* 48 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(1);
@@ -1602,7 +2059,7 @@ module.exports = coreJsData;
 
 
 /***/ }),
-/* 49 */
+/* 56 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -1634,7 +2091,7 @@ module.exports = toSource;
 
 
 /***/ }),
-/* 50 */
+/* 57 */
 /***/ (function(module, exports) {
 
 /**
@@ -1653,14 +2110,14 @@ module.exports = getValue;
 
 
 /***/ }),
-/* 51 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var mapCacheClear = __webpack_require__(52),
-    mapCacheDelete = __webpack_require__(59),
-    mapCacheGet = __webpack_require__(61),
-    mapCacheHas = __webpack_require__(62),
-    mapCacheSet = __webpack_require__(63);
+var mapCacheClear = __webpack_require__(59),
+    mapCacheDelete = __webpack_require__(66),
+    mapCacheGet = __webpack_require__(68),
+    mapCacheHas = __webpack_require__(69),
+    mapCacheSet = __webpack_require__(70);
 
 /**
  * Creates a map cache object to store key-value pairs.
@@ -1691,12 +2148,12 @@ module.exports = MapCache;
 
 
 /***/ }),
-/* 52 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Hash = __webpack_require__(53),
+var Hash = __webpack_require__(60),
     ListCache = __webpack_require__(3),
-    Map = __webpack_require__(14);
+    Map = __webpack_require__(16);
 
 /**
  * Removes all key-value entries from the map.
@@ -1718,14 +2175,14 @@ module.exports = mapCacheClear;
 
 
 /***/ }),
-/* 53 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var hashClear = __webpack_require__(54),
-    hashDelete = __webpack_require__(55),
-    hashGet = __webpack_require__(56),
-    hashHas = __webpack_require__(57),
-    hashSet = __webpack_require__(58);
+var hashClear = __webpack_require__(61),
+    hashDelete = __webpack_require__(62),
+    hashGet = __webpack_require__(63),
+    hashHas = __webpack_require__(64),
+    hashSet = __webpack_require__(65);
 
 /**
  * Creates a hash object.
@@ -1756,7 +2213,7 @@ module.exports = Hash;
 
 
 /***/ }),
-/* 54 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var nativeCreate = __webpack_require__(7);
@@ -1777,7 +2234,7 @@ module.exports = hashClear;
 
 
 /***/ }),
-/* 55 */
+/* 62 */
 /***/ (function(module, exports) {
 
 /**
@@ -1800,7 +2257,7 @@ module.exports = hashDelete;
 
 
 /***/ }),
-/* 56 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var nativeCreate = __webpack_require__(7);
@@ -1836,7 +2293,7 @@ module.exports = hashGet;
 
 
 /***/ }),
-/* 57 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var nativeCreate = __webpack_require__(7);
@@ -1865,7 +2322,7 @@ module.exports = hashHas;
 
 
 /***/ }),
-/* 58 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var nativeCreate = __webpack_require__(7);
@@ -1894,7 +2351,7 @@ module.exports = hashSet;
 
 
 /***/ }),
-/* 59 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getMapData = __webpack_require__(8);
@@ -1918,7 +2375,7 @@ module.exports = mapCacheDelete;
 
 
 /***/ }),
-/* 60 */
+/* 67 */
 /***/ (function(module, exports) {
 
 /**
@@ -1939,7 +2396,7 @@ module.exports = isKeyable;
 
 
 /***/ }),
-/* 61 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getMapData = __webpack_require__(8);
@@ -1961,7 +2418,7 @@ module.exports = mapCacheGet;
 
 
 /***/ }),
-/* 62 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getMapData = __webpack_require__(8);
@@ -1983,7 +2440,7 @@ module.exports = mapCacheHas;
 
 
 /***/ }),
-/* 63 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getMapData = __webpack_require__(8);
@@ -2011,10 +2468,10 @@ module.exports = mapCacheSet;
 
 
 /***/ }),
-/* 64 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var createBaseFor = __webpack_require__(65);
+var createBaseFor = __webpack_require__(72);
 
 /**
  * The base implementation of `baseForOwn` which iterates over `object`
@@ -2033,7 +2490,7 @@ module.exports = baseFor;
 
 
 /***/ }),
-/* 65 */
+/* 72 */
 /***/ (function(module, exports) {
 
 /**
@@ -2064,23 +2521,23 @@ module.exports = createBaseFor;
 
 
 /***/ }),
-/* 66 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assignMergeValue = __webpack_require__(17),
-    cloneBuffer = __webpack_require__(67),
-    cloneTypedArray = __webpack_require__(68),
-    copyArray = __webpack_require__(71),
-    initCloneObject = __webpack_require__(72),
-    isArguments = __webpack_require__(21),
-    isArray = __webpack_require__(22),
-    isArrayLikeObject = __webpack_require__(76),
-    isBuffer = __webpack_require__(24),
+var assignMergeValue = __webpack_require__(19),
+    cloneBuffer = __webpack_require__(74),
+    cloneTypedArray = __webpack_require__(75),
+    copyArray = __webpack_require__(78),
+    initCloneObject = __webpack_require__(79),
+    isArguments = __webpack_require__(23),
+    isArray = __webpack_require__(24),
+    isArrayLikeObject = __webpack_require__(83),
+    isBuffer = __webpack_require__(26),
     isFunction = __webpack_require__(10),
     isObject = __webpack_require__(0),
-    isPlainObject = __webpack_require__(78),
-    isTypedArray = __webpack_require__(25),
-    toPlainObject = __webpack_require__(82);
+    isPlainObject = __webpack_require__(85),
+    isTypedArray = __webpack_require__(27),
+    toPlainObject = __webpack_require__(89);
 
 /**
  * A specialized version of `baseMerge` for arrays and objects which performs
@@ -2163,7 +2620,7 @@ module.exports = baseMergeDeep;
 
 
 /***/ }),
-/* 67 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(1);
@@ -2205,10 +2662,10 @@ module.exports = cloneBuffer;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
 
 /***/ }),
-/* 68 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var cloneArrayBuffer = __webpack_require__(69);
+var cloneArrayBuffer = __webpack_require__(76);
 
 /**
  * Creates a clone of `typedArray`.
@@ -2227,10 +2684,10 @@ module.exports = cloneTypedArray;
 
 
 /***/ }),
-/* 69 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Uint8Array = __webpack_require__(70);
+var Uint8Array = __webpack_require__(77);
 
 /**
  * Creates a clone of `arrayBuffer`.
@@ -2249,7 +2706,7 @@ module.exports = cloneArrayBuffer;
 
 
 /***/ }),
-/* 70 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(1);
@@ -2261,7 +2718,7 @@ module.exports = Uint8Array;
 
 
 /***/ }),
-/* 71 */
+/* 78 */
 /***/ (function(module, exports) {
 
 /**
@@ -2287,12 +2744,12 @@ module.exports = copyArray;
 
 
 /***/ }),
-/* 72 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseCreate = __webpack_require__(73),
-    getPrototype = __webpack_require__(19),
-    isPrototype = __webpack_require__(20);
+var baseCreate = __webpack_require__(80),
+    getPrototype = __webpack_require__(21),
+    isPrototype = __webpack_require__(22);
 
 /**
  * Initializes an object clone.
@@ -2311,7 +2768,7 @@ module.exports = initCloneObject;
 
 
 /***/ }),
-/* 73 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(0);
@@ -2347,7 +2804,7 @@ module.exports = baseCreate;
 
 
 /***/ }),
-/* 74 */
+/* 81 */
 /***/ (function(module, exports) {
 
 /**
@@ -2368,7 +2825,7 @@ module.exports = overArg;
 
 
 /***/ }),
-/* 75 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
@@ -2392,7 +2849,7 @@ module.exports = baseIsArguments;
 
 
 /***/ }),
-/* 76 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isArrayLike = __webpack_require__(13),
@@ -2431,7 +2888,7 @@ module.exports = isArrayLikeObject;
 
 
 /***/ }),
-/* 77 */
+/* 84 */
 /***/ (function(module, exports) {
 
 /**
@@ -2455,11 +2912,11 @@ module.exports = stubFalse;
 
 
 /***/ }),
-/* 78 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
-    getPrototype = __webpack_require__(19),
+    getPrototype = __webpack_require__(21),
     isObjectLike = __webpack_require__(2);
 
 /** `Object#toString` result references. */
@@ -2523,11 +2980,11 @@ module.exports = isPlainObject;
 
 
 /***/ }),
-/* 79 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(6),
-    isLength = __webpack_require__(23),
+    isLength = __webpack_require__(25),
     isObjectLike = __webpack_require__(2);
 
 /** `Object#toString` result references. */
@@ -2589,7 +3046,7 @@ module.exports = baseIsTypedArray;
 
 
 /***/ }),
-/* 80 */
+/* 87 */
 /***/ (function(module, exports) {
 
 /**
@@ -2609,10 +3066,10 @@ module.exports = baseUnary;
 
 
 /***/ }),
-/* 81 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(16);
+/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(18);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -2638,11 +3095,11 @@ module.exports = nodeUtil;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
 
 /***/ }),
-/* 82 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(83),
-    keysIn = __webpack_require__(26);
+var copyObject = __webpack_require__(90),
+    keysIn = __webpack_require__(28);
 
 /**
  * Converts `value` to a plain object flattening inherited enumerable string
@@ -2676,10 +3133,10 @@ module.exports = toPlainObject;
 
 
 /***/ }),
-/* 83 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assignValue = __webpack_require__(84),
+var assignValue = __webpack_require__(91),
     baseAssignValue = __webpack_require__(11);
 
 /**
@@ -2722,7 +3179,7 @@ module.exports = copyObject;
 
 
 /***/ }),
-/* 84 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseAssignValue = __webpack_require__(11),
@@ -2756,15 +3213,15 @@ module.exports = assignValue;
 
 
 /***/ }),
-/* 85 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseTimes = __webpack_require__(86),
-    isArguments = __webpack_require__(21),
-    isArray = __webpack_require__(22),
-    isBuffer = __webpack_require__(24),
-    isIndex = __webpack_require__(27),
-    isTypedArray = __webpack_require__(25);
+var baseTimes = __webpack_require__(93),
+    isArguments = __webpack_require__(23),
+    isArray = __webpack_require__(24),
+    isBuffer = __webpack_require__(26),
+    isIndex = __webpack_require__(29),
+    isTypedArray = __webpack_require__(27);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -2811,7 +3268,7 @@ module.exports = arrayLikeKeys;
 
 
 /***/ }),
-/* 86 */
+/* 93 */
 /***/ (function(module, exports) {
 
 /**
@@ -2837,12 +3294,12 @@ module.exports = baseTimes;
 
 
 /***/ }),
-/* 87 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(0),
-    isPrototype = __webpack_require__(20),
-    nativeKeysIn = __webpack_require__(88);
+    isPrototype = __webpack_require__(22),
+    nativeKeysIn = __webpack_require__(95);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -2876,7 +3333,7 @@ module.exports = baseKeysIn;
 
 
 /***/ }),
-/* 88 */
+/* 95 */
 /***/ (function(module, exports) {
 
 /**
@@ -2902,11 +3359,11 @@ module.exports = nativeKeysIn;
 
 
 /***/ }),
-/* 89 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseRest = __webpack_require__(90),
-    isIterateeCall = __webpack_require__(97);
+var baseRest = __webpack_require__(97),
+    isIterateeCall = __webpack_require__(104);
 
 /**
  * Creates a function like `_.assign`.
@@ -2945,12 +3402,12 @@ module.exports = createAssigner;
 
 
 /***/ }),
-/* 90 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var identity = __webpack_require__(28),
-    overRest = __webpack_require__(91),
-    setToString = __webpack_require__(93);
+var identity = __webpack_require__(30),
+    overRest = __webpack_require__(98),
+    setToString = __webpack_require__(100);
 
 /**
  * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -2968,10 +3425,10 @@ module.exports = baseRest;
 
 
 /***/ }),
-/* 91 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = __webpack_require__(92);
+var apply = __webpack_require__(99);
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
@@ -3010,7 +3467,7 @@ module.exports = overRest;
 
 
 /***/ }),
-/* 92 */
+/* 99 */
 /***/ (function(module, exports) {
 
 /**
@@ -3037,11 +3494,11 @@ module.exports = apply;
 
 
 /***/ }),
-/* 93 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseSetToString = __webpack_require__(94),
-    shortOut = __webpack_require__(96);
+var baseSetToString = __webpack_require__(101),
+    shortOut = __webpack_require__(103);
 
 /**
  * Sets the `toString` method of `func` to return `string`.
@@ -3057,12 +3514,12 @@ module.exports = setToString;
 
 
 /***/ }),
-/* 94 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var constant = __webpack_require__(95),
-    defineProperty = __webpack_require__(18),
-    identity = __webpack_require__(28);
+var constant = __webpack_require__(102),
+    defineProperty = __webpack_require__(20),
+    identity = __webpack_require__(30);
 
 /**
  * The base implementation of `setToString` without support for hot loop shorting.
@@ -3085,7 +3542,7 @@ module.exports = baseSetToString;
 
 
 /***/ }),
-/* 95 */
+/* 102 */
 /***/ (function(module, exports) {
 
 /**
@@ -3117,7 +3574,7 @@ module.exports = constant;
 
 
 /***/ }),
-/* 96 */
+/* 103 */
 /***/ (function(module, exports) {
 
 /** Used to detect hot functions by number of calls within a span of milliseconds. */
@@ -3160,12 +3617,12 @@ module.exports = shortOut;
 
 
 /***/ }),
-/* 97 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var eq = __webpack_require__(5),
     isArrayLike = __webpack_require__(13),
-    isIndex = __webpack_require__(27),
+    isIndex = __webpack_require__(29),
     isObject = __webpack_require__(0);
 
 /**
@@ -3196,82 +3653,7 @@ module.exports = isIterateeCall;
 
 
 /***/ }),
-/* 98 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var pitches = exports.pitches = {
-  major: {
-    14: "C3",
-    13: "D3",
-    12: "E3",
-    11: "F3",
-    10: "G3",
-    9: "A3",
-    8: "B3",
-    7: "C4",
-    6: "D4",
-    5: "E4",
-    4: "F4",
-    3: "G4",
-    2: "A4",
-    1: "B4",
-    0: "C5"
-  },
-  minor: {
-    14: "C3",
-    13: "D3",
-    12: "Eb3",
-    11: "F3",
-    10: "G3",
-    9: "Ab3",
-    8: "B3",
-    7: "C4",
-    6: "D4",
-    5: "Eb4",
-    4: "F4",
-    3: "G4",
-    2: "Ab4",
-    1: "B4",
-    0: "C5"
-  }
-};
-
-var defaultMap = exports.defaultMap = {
-  0: {},
-  1: {},
-  2: {},
-  3: {},
-  4: {},
-  5: {},
-  6: {},
-  7: {},
-  8: {},
-  9: {},
-  10: {},
-  11: {},
-  12: {},
-  13: {},
-  14: {},
-  15: {}
-};
-
-var intervals = exports.intervals = {
-  major: [pitches.major[2], pitches.major[5], pitches.major[9], pitches.major[12]],
-  minor: [pitches.minor[2], pitches.minor[5], pitches.minor[9], pitches.minor[12]]
-};
-
-var demoSpaces = exports.demoSpaces = function demoSpaces() {
-  return [$w('.col-0 > .row-14'), $w('.col-0 > .row-12'), $w('.col-1 > .row-5'), $w('.col-1 > .row-1'), $w('.col-2 > .row-10'), $w('.col-2 > .row-6'), $w('.col-2 > .row-3'), $w('.col-3 > .row-14'), $w('.col-3 > .row-12'), $w('.col-3 > .row-5'), $w('.col-4 > .row-3'), $w('.col-4 > .row-1'), $w('.col-5 > .row-10'), $w('.col-5 > .row-6'), $w('.col-6 > .row-14'), $w('.col-6 > .row-12'), $w('.col-6 > .row-5'), $w('.col-6 > .row-3'), $w('.col-7 > .row-10'), $w('.col-7 > .row-1'), $w('.col-8 > .row-13'), $w('.col-8 > .row-8'), $w('.col-8 > .row-2'), $w('.col-8 > .row-0'), $w('.col-9 > .row-3'), $w('.col-9 > .row-1'), $w('.col-10 > .row-10'), $w('.col-10 > .row-5'), $w('.col-10 > .row-2'), $w('.col-11 > .row-13'), $w('.col-11 > .row-8'), $w('.col-11 > .row-3'), $w('.col-12 > .row-9'), $w('.col-12 > .row-3'), $w('.col-13 > .row-10'), $w('.col-13 > .row-7'), $w('.col-13 > .row-5'), $w('.col-13 > .row-2'), $w('.col-14 > .row-13'), $w('.col-14 > .row-9'), $w('.col-14 > .row-6'), $w('.col-14 > .row-1'), $w('.col-15 > .row-10'), $w('.col-15 > .row-8'), $w('.col-15 > .row-6')];
-};
-
-/***/ }),
-/* 99 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory){
@@ -25713,324 +26095,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory){
 	
 	return Tone;
 }));
-
-/***/ }),
-/* 100 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-function createFooter() {
-  var playButton = $w('<button>');
-  playButton.addClass("play");
-  playButton.html('▶︎');
-
-  var modeButton = $w('<button>');
-  modeButton.addClass("major");
-  modeButton.html('M');
-
-  var demoButton = $w('<button>');
-  demoButton.addClass("demo");
-  demoButton.html('D');
-
-  var clearButton = $w('<button>');
-  clearButton.addClass("clear");
-  clearButton.html('C');
-
-  var footer = $w('footer');
-
-  footer.append(playButton);
-  footer.append(modeButton);
-  footer.append(demoButton);
-  footer.append(clearButton);
-
-  return footer;
-}
-
-exports.default = createFooter;
-
-/***/ }),
-/* 101 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var createGrid = exports.createGrid = function createGrid() {
-  var grid = $w('#grid');
-
-  for (var c = 0; c < 16; c++) {
-    var column = $w('<ul>');
-    column.addClass('col-' + c);
-
-    var _loop = function _loop(r) {
-      var space = $w('<li>');
-      space.attr('pitch', r.toString());
-      space.attr('col', c.toString());
-      var classes = ['row-' + r, 'hue-' + r % 7, 'unselected'];
-      if (r % 7 === 0) classes.push('octave');
-      if (r % 7 === 3) classes.push('fifth');
-      classes.forEach(function (className) {
-        return space.addClass(className);
-      });
-
-      column.append(space);
-    };
-
-    for (var r = 0; r < 15; r++) {
-      _loop(r);
-    }
-    grid.append(column);
-  }
-  return grid;
-};
-
-var resetGrid = exports.resetGrid = function resetGrid() {
-  var selected = $w('.selected');
-  selected.toggleClass('selected');
-  selected.toggleClass('unselected');
-};
-
-/***/ }),
-/* 102 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var createLoopBar = function createLoopBar() {
-  var loopBar = $w('<div>');
-  loopBar.addClass("loop-bar");
-  loopBar.css('left', "-6.25%");
-
-  return loopBar;
-};
-
-exports.default = createLoopBar;
-
-/***/ }),
-/* 103 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.updateSequenceModality = exports.clearSequence = exports.scheduleNotes = exports.updateSequenceMap = exports.scheduleVisuals = exports.playPitch = exports.transport = undefined;
-
-var _merge = __webpack_require__(30);
-
-var _merge2 = _interopRequireDefault(_merge);
-
-var _constants = __webpack_require__(98);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Tone = __webpack_require__(99);
-
-
-Tone.Transport.bpm.value = 120;
-Tone.Transport.loop = true;
-Tone.Transport.loopEnd = '2m';
-
-var transport = exports.transport = Tone.Transport;
-
-var synth = new Tone.PolySynth(16).toMaster();
-
-var seqMap = (0, _merge2.default)({}, _constants.defaultMap);
-var eventIds = {};
-
-var playPitch = exports.playPitch = function playPitch(pitch) {
-  synth.triggerAttackRelease(_constants.pitches[window.mode][pitch], '8n');
-};
-
-var scheduleVisuals = exports.scheduleVisuals = function scheduleVisuals() {
-  scheduleLoop();
-  scheduleHighlights();
-};
-
-var scheduleLoop = function scheduleLoop() {
-  var loopBar = $w('.loop-bar');
-  Tone.Transport.scheduleRepeat(function (time) {
-    var startLeft = parseFloat(loopBar.css('left'));
-    var newLeft = startLeft + .250;
-    loopBar.css('left', '+' + newLeft + '%');
-  }, "8n / 25");
-
-  Tone.Transport.schedule(function (time) {
-    $w('.loop-bar').css('left', '0');
-  }, 0);
-};
-
-var scheduleHighlights = function scheduleHighlights() {
-  var _loop = function _loop(i) {
-    var col = $w('.col-' + i);
-    Tone.Transport.schedule(function (time) {
-      col.addClass('fade');
-      col.addClass('highlight');
-    }, 2 * i + '*16n');
-    Tone.Transport.schedule(function (time) {
-      col.removeClass('highlight');
-    }, 2 * i + 1 + '*16n');
-    Tone.Transport.schedule(function (time) {
-      col.removeClass('fade');
-    }, (2 * i + 2) % 32 + '*16n');
-  };
-
-  for (var i = 0; i < 16; i++) {
-    _loop(i);
-  }
-};
-
-var updateSequenceMap = exports.updateSequenceMap = function updateSequenceMap(space) {
-  var col = space.attr('col');
-  var pitch = _constants.pitches[window.mode][space.attr('pitch')];
-  if (space.hasClass('unselected')) {
-    seqMap[col][pitch] = true;
-  } else {
-    delete seqMap[col][pitch];
-  }
-};
-
-var scheduleNotes = exports.scheduleNotes = function scheduleNotes(col) {
-  if (eventIds[col]) {
-    Tone.Transport.clear(eventIds[col]);
-  }
-  eventIds[col] = Tone.Transport.schedule(function (time) {
-    synth.triggerAttackRelease(Object.keys(seqMap[col]), '8n');
-  }, col + '*8n');
-};
-
-var clearMap = function clearMap() {
-  return seqMap = (0, _merge2.default)({}, _constants.defaultMap);
-};
-
-var clearEvents = function clearEvents() {
-  Object.values(eventIds).forEach(function (event) {
-    return Tone.Transport.clear(event);
-  });
-  eventIds = {};
-};
-
-var clearSequence = exports.clearSequence = function clearSequence() {
-  clearMap();
-  clearEvents();
-};
-
-var updateSequenceModality = exports.updateSequenceModality = function updateSequenceModality() {
-  var newMode = window.mode === 'major' ? 'minor' : 'major';
-  for (var _col = 0; _col < 16; _col++) {
-    var column = seqMap[_col];
-    var adjusted = false;
-    for (var i = 0; i < 4; i++) {
-      var pitch = _constants.intervals[window.mode][i];
-      if (column[pitch]) {
-        delete column[pitch];
-        column[_constants.intervals[newMode][i]] = true;
-        adjusted = true;
-      }
-    }
-    if (adjusted) scheduleNotes(_col);
-  }
-};
-
-/***/ }),
-/* 104 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.pause = exports.play = exports.togglePlay = undefined;
-
-var _sequence = __webpack_require__(103);
-
-var togglePlay = exports.togglePlay = function togglePlay(e) {
-  var button = $w(e.currentTarget);
-  button.hasClass('play') ? play(button) : pause(button);
-};
-
-var play = exports.play = function play(button) {
-  $w('.loop-bar').css('left', '0');
-  _sequence.transport.start('+0.3');
-  button.nodes[0].className = "pause";
-  button.html('🁢 🁢');
-};
-
-var pause = exports.pause = function pause(button) {
-  $w('.loop-bar').css('left', '-6.25%');
-  $w('.playing').toggleClass('playing');
-  _sequence.transport.stop();
-  button.nodes[0].className = "play";
-  button.html('▶︎');
-};
-
-/***/ }),
-/* 105 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = displayInstructions;
-function displayInstructions() {
-  var frame = $w('<div>');
-  frame.addClass('instruction-frame');
-
-  var instructions = $w('<div>');
-  instructions.append('<h3>Welcome to tuneLoop!</h3>');
-  instructions.append('<p>Click spaces to select/deselect notes,</p><br/>');
-  instructions.append('<p>Then click the <span>▶︎</span> button to hear your masterpiece!</p><br/>');
-  instructions.append('<p>(Click anywhere to continue)</p>');
-  frame.append(instructions);
-
-  $w('body').append(frame);
-  var instructionFrame = $w('.instruction-frame');
-  instructionFrame.on('click', furtherInstructions(instructionFrame));
-}
-
-var furtherInstructions = function furtherInstructions(instructionFrame) {
-  return function (e) {
-    e.stopPropagation();
-
-    var pageTwo = $w('<div>');
-    pageTwo.append("<p>The <span>M</span> button Modulates minor/major.</p><br/>");
-    pageTwo.append("<p>Click <span>D</span> to hear a Demo melody.</p><br/>");
-    pageTwo.append("<p>Careful! Clicking <span>C</span> will Clear every note.</p><br/>");
-    pageTwo.append('<p>(Click anywhere to continue)</p>');
-
-    instructionFrame.empty();
-    instructionFrame.append(pageTwo);
-
-    instructionFrame.off('click');
-    instructionFrame.on('click', closeInstructions(instructionFrame));
-  };
-};
-
-var closeInstructions = function closeInstructions(instructionFrame) {
-  return function (e) {
-    e.stopPropagation();
-    instructionFrame.remove();
-  };
-};
 
 /***/ })
 /******/ ]);

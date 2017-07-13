@@ -13,16 +13,16 @@ import { playPitch,
        } from './sequence';
 
 $w(() => {
+  const body = $w('body');
+  body.append("<header><img src='./logo.png' /></header>");
   const grid = createGrid();
-  const footer = createFooter();
-  const loopBar = createLoopBar();
-
-  grid.append(loopBar);
+  createFooter();
+  createLoopBar();
   scheduleVisuals();
 
-  $w('body').on('mousedown', () => window.mousedown = true);
-  $w('body').on('mouseup', () => window.mousedown = false);
-
+  body.on('mousedown', () => window.mousedown = true);
+  body.on('mouseup', () => window.mousedown = false);
+  document.onkeypress = handleKeyPress;
   grid.on('mouseleave', () => window.mousedown = false);
   grid.on('mousedown', triggerToggle);
   grid.on('mouseover', triggerToggle);
@@ -36,6 +36,27 @@ $w(() => {
 });
 
 window.mode = 'major';
+const handleKeyPress = (e) => {
+  e.preventDefault();
+  console.log(e.keyCode);
+  switch (e.keyCode) {
+    case 32:
+    case 112:
+      togglePlay();
+      break;
+    case 109:
+      toggleMode();
+      break;
+    case 100:
+      demo();
+      break;
+    case 99:
+      clear();
+      break;
+    default:
+      return;
+  }
+}
 
 const triggerToggle = (e) => {
   if (!window.mousedown && e.type === 'mouseover') return;
@@ -53,9 +74,9 @@ const toggleSpace = (space) => {
   space.toggleClass('selected');
 };
 
-const toggleMode = (e) => {
+const toggleMode = () => {
   updateSequenceModality();
-  const button = $w(e.currentTarget);
+  const button = $w('#mode');
   if (button.hasClass('major')) {
     button.html('m');
     window.mode = 'minor';
@@ -70,7 +91,7 @@ const toggleMode = (e) => {
 const clear = () => {
   resetGrid();
   clearSequence();
-  pause($w('button:first-child'));
+  pause($w('#play'));
 };
 
 const demo = () => {
@@ -87,6 +108,7 @@ const displayDemoText = () => {
   message.addClass("demo-text");
   message.html("A tune just for you...");
   $w('#grid').append(message);
-  setTimeout(() => message.html("Let's go!"), 100 * 45);
-  setTimeout(() => $w('.demo-text').remove(), 100 * 50);
+  let demoText = $w('.demo-text');
+  setTimeout(() => demoText.html("Let's go!"), 100 * 45);
+  setTimeout(() => demoText.remove(), 100 * 50);
 }

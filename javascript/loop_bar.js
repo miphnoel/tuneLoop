@@ -3,7 +3,7 @@ const createLoopBar = () => {
   loopBar.addClass("loop-bar");
   loopBar.css('left', "-6.25%");
 
-  return loopBar;
+  $w('#grid').append(loopBar);
 }
 
 export default createLoopBar;

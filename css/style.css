@@ -48,7 +48,7 @@ h1 {
 
 .loop-bar {
   position: absolute;
-  background: rgba(22, 168, 240, 0.4);
+  background: rgba(22, 168, 240, 0.5);
   height: 100%;
   width: 6.25%;
 }
@@ -118,13 +118,13 @@ li.unselected:hover {
 }
 
 ul.fade > li.selected {
-  -webkit-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
 }
 
 ul.highlight > li.selected {
   background: #FFBB0B;
-  box-shadow: inset 2em #FF3E0B;
-  -webkit-transition: none;
+  box-shadow: inset 0 0 1px 1px #16A9F0;
+  transition: none;
 }
 
 footer {
@@ -147,11 +147,20 @@ button {
   font-size: 18px;
   background: rgb(22, 168, 240);
   border-radius: 50%;
+  border: 1px solid #FFC93B;
+  box-shadow: -1px 1px 2px #FFC93B, inset 1px -1px 1px #026EA3;
+  text-shadow: -1px 1px 1px #026EA3;
+  transition: all 0.1s;
 }
 
 button:hover {
   cursor: pointer;
   background: rgb(50, 200, 240);
+}
+
+button:active {
+  background: #026EA3;
+  box-shadow: none;
 }
 
 .links {
@@ -171,6 +180,7 @@ button:hover {
   position: absolute;
   z-index: 3;
   align-self: center;
+  text-shadow: -1px 1px 1px #026EA3;
 }
 
 .instruction-frame {
@@ -198,6 +208,8 @@ button:hover {
   color: rgb(22, 168, 240);
   font-size: 24px;
   line-height: 2em;
+  text-shadow: -1px 1px 1px #026EA3;
+  font-weight: bold;
 }
 
 .instruction-frame span {
@@ -207,4 +219,7 @@ button:hover {
   padding: 10px 14px;
   text-align: center;
   font-weight: bold;
+  border: 1px solid #FFC93B;
+  box-shadow: -1px 1px 2px #FFC93B, inset 1px -1px 1px #026EA3;
+  text-shadow: -1px 1px 1px #026EA3
 }

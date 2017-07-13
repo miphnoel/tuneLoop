@@ -1,5 +1,6 @@
 export const createGrid = () => {
-  const grid = $w('#grid');
+  const grid = $w('<div>');
+  grid.attr('id', 'grid');
 
   for (let c = 0; c < 16; c++) {
     let column = $w('<ul>');
@@ -18,7 +19,8 @@ export const createGrid = () => {
     }
     grid.append(column)
   }
-  return grid;
+  $w('body').append(grid);
+  return $w('#grid');
 }
 
 export const resetGrid = () => {
