@@ -1,2 +1,4 @@
 .DS_Store
 bundle.js.map
+node_modules
+package-lock.json
